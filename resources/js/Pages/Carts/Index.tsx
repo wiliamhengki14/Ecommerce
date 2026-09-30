@@ -48,6 +48,14 @@ const Index = (props: IndexType) => {
             })
         }
     };
+    const handleOrder = () => {
+        if(confirm('Apakah anda ingin Order?')) {
+            router.post(route('orders.order'), {}, {
+                preserveScroll: true,
+            });
+        }
+    }
+    
 
     // Hitung total keseluruhan belanja
     const grandTotal = carts.reduce((total, item) => {
@@ -152,10 +160,12 @@ const Index = (props: IndexType) => {
                         {/* Footer Total Keseluruhan */}
                         <div className="mt-8 pt-6 border-t border-slate-200 flex justify-between items-center">
                             <span className="font-bold text-base text-slate-700">Total Pembayaran</span>
+                            <Button onClick={handleOrder}>Order</Button>
                             <span className="font-extrabold text-2xl text-[#1c1c1c]">
                                 Rp {grandTotal.toLocaleString("id-ID")}
                             </span>
                         </div>
+                        
                     </div>
                 )}
             </div>
