@@ -1,0 +1,108 @@
+import { Head, useForm } from "@inertiajs/react"
+import Input from "@/Components/ui/Input";
+import Button from "@/Components/ui/Button/Button";
+import { FormEvent, useRef } from "react";
+import {Link} from "@inertiajs/react";
+
+interface MenuProp {
+    name: string,
+    price: string | number,
+    description: string,
+    stock: number | string,
+    image: File | null,
+}
+const Create = () => {
+    const {data, setData, errors, processing, post, reset} = useForm<MenuProp>({
+        name: "",
+        price: "",
+        description: "",
+        stock: "",
+        image: null,
+    });
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const handleSubmit = (event: FormEvent) => {
+        event.preventDefault();
+        post(route('menus.store'), {
+            onSuccess: () => {
+                reset();
+                if(fileInputRef.current) fileInputRef.current.value = "";
+            }
+        });
+    }
+
+    return (
+        <main className="p-5 flex flex-col justify-center items-center h-[100vh]">
+            <Head title="Create"/>
+            <div className="flex flex-col shadow-[0px_0px_4px_rgba(0,0,0,0.2)] p-5 rounded-2xl gap-2 w-full md:w-[30%] ">
+                <h1 className="text-center font-bold text-[24px]">Halaman Tambah Product</h1>
+                <form onSubmit={handleSubmit} className="mt-3 p-3 flex flex-col gap-3">
+                    <Input 
+                        id="name" 
+                        name="name" 
+                        label="Nama Product" 
+                        placeholder="Masukkan Nama"
+                        value={data.name}
+                        error={errors.name}
+                        onChange={(e) => setData('name', e.target.value)}
+                        required
+                    />
+                    <Input 
+                        id="price" 
+                        name="price" 
+                        label="Harga Product" 
+                        placeholder="Masukkan Harga" 
+                        type="number"
+                        value={data.price}
+                        error={errors.price}
+                        onChange={(e) => setData('price', e.target.value)}
+                        required
+                    />
+                    <Input 
+                        id="description" 
+                        name="description" 
+                        label="Deskripsi Produk" 
+                        placeholder="Masukkan Deskripsi Produk" 
+                        type="text"
+                        value={data.description}
+                        error={errors.description}
+                        onChange={(e) => setData('description', e.target.value)}
+                        required
+                    />
+                    <Input 
+                        id="stock" 
+                        name="stock" 
+                        label="Stok Produk" 
+                        placeholder="Masukkan Stok Produk" 
+                        type="number"
+                        value={data.stock}
+                        error={errors.stock}
+                        onChange={(e) => setData('stock', e.target.value)}
+                        required
+                    />
+                    <Input 
+                        id="image" 
+                        ref={fileInputRef}
+                        name="image" 
+                        label="Gambar Produk" 
+                        type="file"
+                        required
+                        error={errors.image}
+                        onChange={(e) => {
+                            if(e.target.files && e.target.files[0]) {
+                                setData('image', e.target.files[0])
+                            }
+                        }}
+                        className="file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-[#1c1c1c] file:text-white hover:file:bg-[#333333] cursor-pointer"
+                    />
+                    <Button type="submit" color="primer" disabled={processing}>{processing ? 'Memproses...' : 'Tambah'}</Button>
+                </form>
+                <div className="flex flex-col justify-center items-center">
+                    <Link href={route('menus.index')} className="text-center py-1 px-2 border border-[#1c1c1c] w-[100px] rounded-[14px]">Ke Menu</Link>
+                </div>
+                
+            </div>
+        </main>
+    )
+}
+
+export default Create;
