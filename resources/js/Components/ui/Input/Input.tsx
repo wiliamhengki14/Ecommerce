@@ -2,7 +2,7 @@
 import React, { InputHTMLAttributes, forwardRef } from 'react';
 // Mewarisi semua atribut HTML standar <input>
 interface PropTypes extends InputHTMLAttributes<HTMLInputElement> {
-    label: string;
+    label?: string;
     id: string;
     name: string;
     error?: string; // Tambahan untuk pesan validasi Laravel

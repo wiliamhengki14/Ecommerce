@@ -2,6 +2,7 @@ import { router, useForm } from "@inertiajs/react";
 import { FormEvent, useRef } from "react";
 import Button from "@/Components/ui/Button/Button";
 import Input from "@/Components/ui/Input";
+import {Link} from "@inertiajs/react";
 interface MenuType {
     id: number;
     name: string;
@@ -41,10 +42,10 @@ const Edit = ({menu}: IndexMenu) => {
         })
     }
     return (
-        <main>
-            <div>
-                <h1>Form Edit</h1>
-                <form onSubmit={handleUpdate}>
+        <main className="p-5 flex flex-col items-center justify-center h-[100vh]">
+            <div className="shadow-[0px_0px_4px_rgba(0,0,0,0.2)] p-5 rounded-2xl w-[40%]">
+                <h1 className="font-bold text-[32px] text-center">Form Edit</h1>
+                <form onSubmit={handleUpdate} className="p-4 flex flex-col">
                     <Input
                         label="Name"
                         id="name"
@@ -83,23 +84,28 @@ const Edit = ({menu}: IndexMenu) => {
                         required
                         onChange={(e) => setData('stock', e.target.value)}
                     />
-                    <img src={`${menu.image_url}`} alt={menu.name} className="w-[50%] h-[50%]"/>
-                    <Input 
-                        type="file"
-                        id="image"
-                        label="Gambar"
-                        name="image"
-                        ref={RefInput}
-                        error={errors.image}
-                        onChange={(e) => {
-                            if(e.target.files && e.target.files[0]) {
-                                setData('image', e.target.files[0]);
-                            }
-                        }}
-                    />
+                    <p className="font-bold text-[14px]">Gambar</p>
+                    <div className="mt-1 mb-5 flex gap-4 items-center">
+                        <img src={`${menu.image_url}`} alt={menu.name} className="w-[30%] h-[30%] rounded-xl"/>
+                        <Input 
+                            type="file"
+                            id="image"
+                            name="image"
+                            ref={RefInput}
+                            error={errors.image}
+                            onChange={(e) => {
+                                if(e.target.files && e.target.files[0]) {
+                                    setData('image', e.target.files[0]);
+                                }
+                            }}
+                            className="border border-none file:border-none file:rounded-xl file:p-2 file:bg-[#1c1c1c] file:text-[#fff] file:outline-none"
+                        />
+                    </div>
+                    
                     <Button type="submit" disabled={processing}>
                         {processing ? 'Memproses..' : 'Update'}
                     </Button>
+                    <Link href={route('menus.detail', menu.id)} className="text-center mt-3 italic hover:underline">Kembali</Link>
                 </form>
             </div>
         </main>

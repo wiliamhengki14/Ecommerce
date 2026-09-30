@@ -38,7 +38,7 @@ class CartController extends Controller
                 'quantity' => $validasi['quantity'] + $existingCart->quantity,
             ]);
         }
-        return Redirect::back();
+        return Redirect::route('carts.index')->with('message', 'Data berhasil di tambahkann');
     }
 
     // index
