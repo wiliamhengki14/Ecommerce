@@ -15,23 +15,23 @@ export default function Authenticated({
         useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="border-b border-gray-100 bg-white">
+        <div className="min-h-screen bg-white">
+            <nav className="border-b border-gray-100 bg-white shadow-md">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
-                            <div className="flex shrink-0 items-center">
+                            {/* <div className="flex shrink-0 items-center">
                                 <Link href="/">
                                     <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
                                 </Link>
-                            </div>
+                            </div> */}
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
+                                    href={route('menus.index')}
+                                    active={route().current('menus')}
                                 >
-                                    Dashboard
+                                    E-Commerce
                                 </NavLink>
                             </div>
                         </div>
@@ -64,6 +64,22 @@ export default function Authenticated({
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
+                                        
+                                        <Dropdown.Link
+                                            href={route('menus.create')}
+                                        >
+                                            Tambah Produk
+                                        </Dropdown.Link>
+                                        <Dropdown.Link
+                                            href={route('carts.index')}
+                                        >
+                                            Keranjang
+                                        </Dropdown.Link>
+                                        <Dropdown.Link
+                                            href={route('orders.index')}
+                                        >
+                                            List Order
+                                        </Dropdown.Link>
                                         <Dropdown.Link
                                             href={route('profile.edit')}
                                         >
@@ -81,7 +97,7 @@ export default function Authenticated({
                             </div>
                         </div>
 
-                        <div className="-me-2 flex items-center sm:hidden">
+                        <div className="flex items-center justify-between sm:hidden">
                             <button
                                 onClick={() =>
                                     setShowingNavigationDropdown(
@@ -132,10 +148,10 @@ export default function Authenticated({
                 >
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
+                            href={route('menus.index')}
+                            active={route().current('menus.index')}
                         >
-                            Dashboard
+                            E-Commerce
                         </ResponsiveNavLink>
                     </div>
 
@@ -150,6 +166,15 @@ export default function Authenticated({
                         </div>
 
                         <div className="mt-3 space-y-1">
+                            <ResponsiveNavLink href={route('menus.create')}>
+                                Tambah Produk
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('carts.index')}>
+                                Keranjang
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('orders.index')}>
+                                List Order
+                            </ResponsiveNavLink>
                             <ResponsiveNavLink href={route('profile.edit')}>
                                 Profile
                             </ResponsiveNavLink>

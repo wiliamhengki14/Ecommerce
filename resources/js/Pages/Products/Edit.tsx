@@ -3,6 +3,8 @@ import { FormEvent, useRef } from "react";
 import Button from "@/Components/ui/Button/Button";
 import Input from "@/Components/ui/Input";
 import {Link} from "@inertiajs/react";
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import {Head} from "@inertiajs/react";
 interface MenuType {
     id: number;
     name: string;
@@ -42,7 +44,9 @@ const Edit = ({menu}: IndexMenu) => {
         })
     }
     return (
+        <AuthenticatedLayout>
         <main className="p-5 flex flex-col items-center justify-center h-[100vh]">
+            <Head title="Edit"/>
             <div className="shadow-[0px_0px_4px_rgba(0,0,0,0.2)] p-5 rounded-2xl w-[40%]">
                 <h1 className="font-bold text-[32px] text-center">Form Edit</h1>
                 <form onSubmit={handleUpdate} className="p-4 flex flex-col">
@@ -109,6 +113,7 @@ const Edit = ({menu}: IndexMenu) => {
                 </form>
             </div>
         </main>
+        </AuthenticatedLayout>
     )
 }
 
