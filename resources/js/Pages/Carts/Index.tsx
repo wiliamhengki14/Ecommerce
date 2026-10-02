@@ -1,6 +1,7 @@
 import { Head, router } from "@inertiajs/react";
 import Button from "@/Components/ui/Button/Button";
 import {Link} from "@inertiajs/react";
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 interface MenuType {
     id: number;
     name: string;
@@ -63,15 +64,16 @@ const Index = (props: IndexType) => {
     }, 0);
 
     return (
-        <main className="p-8 min-h-screen bg-slate-50">
+        <AuthenticatedLayout>
+        <main className="p-4 md:p-8 min-h-screen bg-slate-50">
             <Head title="Cart" />
 
-            <div className="max-w-4xl mx-auto bg-white rounded-2xl p-6 shadow-sm">
+            <div className="max-w-4xl mx-auto bg-white rounded-2xl p-4 md:p-6 shadow-sm">
                 {/* Header Halaman */}
-                <div className="flex justify-between items-center pb-6 border-b border-slate-100 mb-6">
-                    <h1 className="text-2xl font-bold text-[#1c1c1c]">Halaman Keranjang</h1>
-                    <div className="flex items-center gap-3">
-                        <span className="text-sm font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pb-6 border-b border-slate-100 mb-6 gap-4">
+                    <h1 className="text-xl md:text-2xl font-bold text-[#1c1c1c]">Halaman Keranjang</h1>
+                    <div className="flex items-center justify-between sm:justify-end gap-3">
+                        <span className="text-sm font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full truncate max-w-[150px] sm:max-w-none">
                             {user?.name}
                         </span>
                         <Link href={route('menus.index')}>
@@ -88,7 +90,7 @@ const Index = (props: IndexType) => {
                 ) : (
                     <div>
                         {/* Header Kolom Grid */}
-                        <div className="grid grid-cols-3 pb-3 border-b border-slate-200 text-xs font-bold uppercase tracking-wider text-slate-400">
+                        <div className="hidden md:grid md:grid-cols-3 pb-3 border-b border-slate-200 text-xs font-bold uppercase tracking-wider text-slate-400">
                             <div>Produk</div>
                             <div className="text-center">Jumlah</div>
                             <div className="text-right">Subtotal</div>
@@ -97,38 +99,39 @@ const Index = (props: IndexType) => {
                         {/* List Item Keranjang */}
                         <div className="divide-y divide-slate-100">
                             {carts.map((item) => (
-                                // item.menu && (
-                                    <div
-                                        key={item.id}
-                                        className="grid grid-cols-3 items-center py-4 gap-4"
-                                    >
-                                        {/* Kolom 1: Foto, Nama & Harga Satuan */}
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
-                                                {item.menu.image_url ? (
-                                                    <img
-                                                        src={item.menu.image_url}
-                                                        alt={item.menu.name}
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                ) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-xs text-slate-400">
-                                                        No Img
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div>
-                                                <h3 className="font-bold text-sm text-[#1c1c1c]">
-                                                    {item.menu.name}
-                                                </h3>
-                                                <p className="text-xs text-slate-500 mt-0.5">
-                                                    Rp {Number(item.menu.price).toLocaleString("id-ID")}
-                                                </p>
-                                            </div>
+                                <div
+                                    key={item.id}
+                                    className="flex flex-col md:grid md:grid-cols-3 md:items-center py-4 gap-4"
+                                >
+                                    {/* Kolom 1: Foto, Nama & Harga Satuan */}
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
+                                            {item.menu.image_url ? (
+                                                <img
+                                                    src={item.menu.image_url}
+                                                    alt={item.menu.name}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-xs text-slate-400">
+                                                    No Img
+                                                </div>
+                                            )}
                                         </div>
+                                        <div>
+                                            <h3 className="font-bold text-sm text-[#1c1c1c]">
+                                                {item.menu.name}
+                                            </h3>
+                                            <p className="text-xs text-slate-500 mt-0.5">
+                                                Rp {Number(item.menu.price).toLocaleString("id-ID")}
+                                            </p>
+                                        </div>
+                                    </div>
 
-                                        {/* Kolom 2: Tombol Quantity (- / +) */}
-                                        <div className="flex items-center justify-center gap-3">
+                                    {/* Kolom 2: Tombol Quantity (- / +) */}
+                                    <div className="flex items-center justify-between md:justify-center gap-3">
+                                        <span className="md:hidden text-sm font-semibold text-slate-500">Jumlah</span>
+                                        <div className="flex items-center gap-3">
                                             <button
                                                 type="button"
                                                 onClick={() => handleUpdateQuantity("decrement", item.menu_id)}
@@ -147,29 +150,35 @@ const Index = (props: IndexType) => {
                                                 +
                                             </button>
                                         </div>
+                                    </div>
 
-                                        {/* Kolom 3: Subtotal per Menu */}
-                                        <div className="text-right font-bold text-sm text-[#1c1c1c]">
+                                    {/* Kolom 3: Subtotal per Menu */}
+                                    <div className="flex items-center justify-between md:block md:text-right">
+                                        <span className="md:hidden text-sm font-semibold text-slate-500">Subtotal</span>
+                                        <div className="font-bold text-sm text-[#1c1c1c]">
                                             Rp {(item.menu.price * item.quantity).toLocaleString("id-ID")}
                                         </div>
                                     </div>
-                                )
-                            )}
+                                </div>
+                            ))}
                         </div>
 
                         {/* Footer Total Keseluruhan */}
-                        <div className="mt-8 pt-6 border-t border-slate-200 flex justify-between items-center">
-                            <span className="font-bold text-base text-slate-700">Total Pembayaran</span>
-                            <Button onClick={handleOrder}>Order</Button>
-                            <span className="font-extrabold text-2xl text-[#1c1c1c]">
-                                Rp {grandTotal.toLocaleString("id-ID")}
-                            </span>
+                        <div className="mt-8 pt-6 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+                            <div className="flex justify-between w-full md:w-auto items-center">
+                                <span className="font-bold text-base text-slate-700 md:mr-4">Total Pembayaran : </span>
+                                <span className="font-extrabold text-xl md:text-2xl text-[#1c1c1c]">
+                                    Rp {grandTotal.toLocaleString("id-ID")}
+                                </span>
+                            </div>
+                            <Button className="w-full md:w-auto" onClick={handleOrder}>Order</Button>
                         </div>
                         
                     </div>
                 )}
             </div>
         </main>
+        </AuthenticatedLayout>
     );
 };
 

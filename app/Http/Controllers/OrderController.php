@@ -59,8 +59,9 @@ class OrderController extends Controller
     }
 
     public function show(Order $order): Response {
+        $user = Auth::user();
         $orderItems = OrderItem::with('menu', 'order')->where('order_id', $order->id)->get();
-        return Inertia::render('Orders/Show', ['orderItems' => $orderItems, 'order' => $order]);
+        return Inertia::render('Orders/Show', ['orderItems' => $orderItems, 'order' => $order, 'user' => $user]);
     }
 
     public function completed(Order $order, Request $request) {

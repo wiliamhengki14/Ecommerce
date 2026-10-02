@@ -3,6 +3,7 @@ import Input from "@/Components/ui/Input";
 import Button from "@/Components/ui/Button/Button";
 import { FormEvent, useRef } from "react";
 import {Link} from "@inertiajs/react";
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 interface MenuProp {
     name: string,
@@ -31,9 +32,10 @@ const Create = () => {
     }
 
     return (
+        <AuthenticatedLayout>
         <main className="p-5 flex flex-col justify-center items-center h-[100vh]">
             <Head title="Create"/>
-            <div className="flex flex-col shadow-[0px_0px_4px_rgba(0,0,0,0.2)] p-5 rounded-2xl gap-2 w-full md:w-[30%] ">
+            <div className="flex flex-col shadow-[0px_0px_4px_rgba(0,0,0,0.2)] p-5 rounded-2xl gap-2 w-full md:w-[50%] md:mt-5 mt-7">
                 <h1 className="text-center font-bold text-[24px]">Halaman Tambah Product</h1>
                 <form onSubmit={handleSubmit} className="mt-3 p-3 flex flex-col gap-3">
                     <Input 
@@ -102,6 +104,7 @@ const Create = () => {
                 
             </div>
         </main>
+        </AuthenticatedLayout>
     )
 }
 
