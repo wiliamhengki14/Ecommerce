@@ -68,7 +68,7 @@ const Show = (props: IndexType) => {
                         </div>
                         <div className="flex flex-col gap-1 md:gap-2">
                             <p className="text-xs md:text-sm text-slate-500">Customer Name:</p>
-                            <p className="font-bold text-slate-800 truncate" title={user.name}>{user.name}</p>
+                            <p className="font-bold text-slate-800 truncate" title={order.user.name}>{order.user.name}</p>
                         </div>
                         <div className="flex flex-col gap-1 md:gap-2">
                             <p className="text-xs md:text-sm text-slate-500">Total Harga:</p>

@@ -5,13 +5,17 @@ import Input from "@/Components/ui/Input";
 import {Link} from "@inertiajs/react";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import {Head} from "@inertiajs/react";
+import Select from "@/Components/ui/Select";
+import { filter } from "./Create.constant";
+
 interface MenuType {
     id: number;
     name: string;
     price: number;
     stock: number
     image_url: string | null;
-    description: string
+    description: string;
+    kategori: string;
 }
 interface PropTypes {
     _method: string;
@@ -19,6 +23,7 @@ interface PropTypes {
     price: string|number;
     stock: string|number;
     description: string;
+    kategori: string;
     image: File|null;
 }
 interface IndexMenu {
@@ -32,6 +37,7 @@ const Edit = ({menu}: IndexMenu) => {
         price: menu.price||"",
         stock: menu.stock||"",
         description: menu.description||"",
+        kategori: menu.kategori||"",
         image: null,
     })
     const RefInput = useRef<HTMLInputElement>(null);
@@ -88,6 +94,14 @@ const Edit = ({menu}: IndexMenu) => {
                         required
                         onChange={(e) => setData('stock', e.target.value)}
                     />
+                    <Select name="kategori" id="kategori" option={filter}
+                        label="Kategori Produk"
+                        value={data.kategori}
+                        onChange={(e) => setData('kategori', e.target.value)}
+                        error={errors.kategori}
+                        required
+                        className="w-full px-4 py-2 border rounded-xl border-[#e5e5e5] bg-[#fdfdfd] placeholder:text-[#a3a3a3] text-[15px] focus:outline-none focus:ring-1 focus:ring-black"
+                    ></Select>
                     <p className="font-bold text-[14px]">Gambar</p>
                     <div className="mt-1 mb-5 flex gap-4 items-center">
                         <img src={`${menu.image_url}`} alt={menu.name} className="w-[30%] h-[30%] rounded-xl"/>

@@ -1,4 +1,4 @@
-import { Head, router } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 import {Link} from "@inertiajs/react";
 import Button from "@/Components/ui/Button/Button";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -20,11 +20,10 @@ interface IOrder {
 }
 interface IndexTypes {
     orders: IOrder[];
-    user: IUser; 
 }
 const Index = (props: IndexTypes) => {
-    const {orders, user} = props;
-
+    const {orders} = props;
+    const user = usePage<any>().props.auth.user;
     const handleComplete = (id: number, status: string) => {
         if(confirm('Apakah sudah membayar?')) {
             router.put(route('orders.completed', id), {status: status}, {
@@ -73,14 +72,14 @@ const Index = (props: IndexTypes) => {
                                                 <Link href={route('orders.show', item.id)}>
                                                     <Button className="!px-3 !py-1.5 text-xs">Detail</Button>
                                                 </Link>
-                                                {item.status === 'pending' ? (
+                                                {item.status === 'pending' && user.is_admin ? (
                                                     <Button 
                                                         className="!px-3 !py-1.5 text-xs"
                                                         onClick={() => handleComplete(item.id, 'completed')}
                                                     >
                                                         Completed
                                                     </Button>
-                                                ) : ''}
+                                                ) : null}
                                             </div>
                                         </td>
                                     </tr>

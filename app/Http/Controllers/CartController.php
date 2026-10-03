@@ -38,7 +38,7 @@ class CartController extends Controller
                 'quantity' => $validasi['quantity'] + $existingCart->quantity,
             ]);
         }
-        return Redirect::route('carts.index')->with('message', 'Data berhasil di tambahkann');
+        return Redirect::back()->with('message', 'Data berhasil di tambahkann');
     }
 
     // index
@@ -70,12 +70,9 @@ class CartController extends Controller
         return Redirect::back();
     }
 
-    public function remove(Menu $menu) {
+    public function remove() {
         $user_id = Auth::id();
-        $cart = Cart::where('menu_id', $menu->id)
-            ->where('user_id', $user_id)
-            ->first();
-        $cart->delete();
-        return Redirect::back();
+        Cart::where('user_id', $user_id)->delete();
+        return Redirect::route('menus.index');
     }
 }

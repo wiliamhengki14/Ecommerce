@@ -4,12 +4,15 @@ import Button from "@/Components/ui/Button/Button";
 import { FormEvent, useRef } from "react";
 import {Link} from "@inertiajs/react";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import Select from "@/Components/ui/Select";
+import { filter } from "./Create.constant";
 
 interface MenuProp {
     name: string,
     price: string | number,
     description: string,
     stock: number | string,
+    kategori: string;
     image: File | null,
 }
 const Create = () => {
@@ -18,6 +21,7 @@ const Create = () => {
         price: "",
         description: "",
         stock: "",
+        kategori: "",
         image: null,
     });
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -81,6 +85,17 @@ const Create = () => {
                         onChange={(e) => setData('stock', e.target.value)}
                         required
                     />
+                    <Select 
+                        name="kategori"
+                        label="kategori"
+                        id="kategori"
+                        option={filter}
+                        value={data.kategori}
+                        error={errors.kategori}
+                        onChange={(e) => setData('kategori', e.target.value)}
+                    >
+
+                    </Select>
                     <Input 
                         id="image" 
                         ref={fileInputRef}

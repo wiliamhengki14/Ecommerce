@@ -31,7 +31,8 @@ const Login = ({ status }: LoginProps) => {
             <Head title="Login" />
 
             <div className="shadow-[0px_0px_4px_rgba(0,0,0,0.2)] p-[32px] rounded-[20px] md:w-[30%] w-full bg-white">
-                <h1 className="text-center font-bold text-[32px] mb-4 text-[#1c1c1c]">Login</h1>
+                <h1 className="text-center font-bold text-3xl text-[#1c1c1c] mb-1">Warung Wiliam Jaya</h1>
+                <h1 className="text-center text-[16px] mb-5 text-[#1c1c1c]">Silahkan login untuk melanjutkan</h1>
 
                 {/* Notifikasi status session (misal setelah reset password) */}
                 {status && (

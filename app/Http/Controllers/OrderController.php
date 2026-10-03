@@ -8,7 +8,6 @@ use App\Models\Order;       // 👈 Wajib dari App\Models
 use App\Models\OrderItem;   // 👈 Wajib dari App\Models
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -16,26 +15,27 @@ use Inertia\Response;
 
 class OrderController extends Controller
 {
-    public function order() {
+    public function order()
+    {
         $user_id = Auth::id();
         $carts = Cart::with('menu')->where('user_id', $user_id)->get();
 
-        if($carts == null) {
+        if ($carts == null) {
             return Redirect::back();
-        }else {
+        } else {
             $totalAmount = $carts->reduce(function ($total, $cart) {
                 return $total + ($cart->menu ? $cart->menu->price * $cart->quantity : 0);
             }, 0);
 
             $order = Order::create([
                 'user_id' => $user_id,
-                'order_number' => 'ORD-' .strtoupper(Str::random(8)),
+                'order_number' => 'ORD-'.strtoupper(Str::random(8)),
                 'total_amount' => $totalAmount,
                 'status' => 'pending',
                 'notes' => '',
             ]);
 
-            foreach($carts as $cart) {
+            foreach ($carts as $cart) {
                 $menu = Menu::find($cart->menu_id);
                 $menu->decrement('stock', $cart->quantity);
                 OrderItem::create([
@@ -52,23 +52,38 @@ class OrderController extends Controller
         return Redirect::back()->with('message', 'Data berhasil di order!');
     }
 
-    public function index(): Response {
+    public function index(): Response
+    {
         $user = Auth::user();
-        $orders = Order::latest()->get();
+        if ($user->is_admin) {
+            $orders = Order::latest()->get();
+        } else {
+            $orders = Order::latest()->where('user_id', $user->id)->get();
+        }
+
         return Inertia::render('Orders/Index', ['orders' => $orders, 'user' => $user]);
     }
 
-    public function show(Order $order): Response {
+    public function show(Order $order)
+    {
         $user = Auth::user();
-        $orderItems = OrderItem::with('menu', 'order')->where('order_id', $order->id)->get();
-        return Inertia::render('Orders/Show', ['orderItems' => $orderItems, 'order' => $order, 'user' => $user]);
+        if ($user->id !== $order->user_id && ! $user->is_admin) {
+            return Redirect::route('orders.index');
+        } else {
+            $order->load('user');
+            $orderItems = OrderItem::with('menu', 'order')->where('order_id', $order->id)->get();
+
+            return Inertia::render('Orders/Show', ['orderItems' => $orderItems, 'order' => $order, 'user' => $user]);
+        }
+
     }
 
-    public function completed(Order $order, Request $request) {
+    public function completed(Order $order, Request $request)
+    {
         $validasi = $request->validate([
             'status' => 'required|string',
         ]);
-        if($order->status == 'pending') {
+        if ($order->status == 'pending') {
             $order->update([
                 'status' => $validasi['status'],
             ]);

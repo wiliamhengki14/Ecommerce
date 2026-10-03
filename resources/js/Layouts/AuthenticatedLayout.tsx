@@ -9,7 +9,7 @@ export default function Authenticated({
     header,
     children,
 }: PropsWithChildren<{ header?: ReactNode }>) {
-    const user = usePage().props.auth.user;
+    const user = usePage<any>().props.auth.user;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -65,11 +65,13 @@ export default function Authenticated({
 
                                     <Dropdown.Content>
                                         
-                                        <Dropdown.Link
-                                            href={route('menus.create')}
-                                        >
-                                            Tambah Produk
-                                        </Dropdown.Link>
+                                        {user.is_admin ? (
+                                            <Dropdown.Link
+                                                href={route('menus.create')}
+                                            >
+                                                Tambah Produk
+                                            </Dropdown.Link>
+                                        ) : null}
                                         <Dropdown.Link
                                             href={route('carts.index')}
                                         >
@@ -166,9 +168,11 @@ export default function Authenticated({
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('menus.create')}>
-                                Tambah Produk
-                            </ResponsiveNavLink>
+                            {user.is_admin ? (
+                                <ResponsiveNavLink href={route('menus.create')}>
+                                    Tambah Produk
+                                </ResponsiveNavLink>
+                            ) : null}
                             <ResponsiveNavLink href={route('carts.index')}>
                                 Keranjang
                             </ResponsiveNavLink>

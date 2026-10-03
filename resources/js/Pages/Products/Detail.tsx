@@ -1,4 +1,4 @@
-import { Head, router } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 import {Link} from "@inertiajs/react";
 import Button from "@/Components/ui/Button/Button";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -16,6 +16,8 @@ interface IndexTypes {
 }
 const Detail = (props: IndexTypes) => {
     const {menu} = props;
+    const { auth } = usePage<any>().props;
+    const user = auth.user;
     
     const handleDelete = (id: number, name: string) => {
         if(confirm(`Apakah anda ingin hapus ${name}?`)) {
@@ -76,18 +78,20 @@ const Detail = (props: IndexTypes) => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col gap-3 mt-4">
+                        <div className="flex flex-col gap-3 mt-4 mb-7">
                             <Button onClick={() => handleCart(menu.id)} color="primer" className="w-full py-3 text-lg font-bold shadow-md hover:shadow-lg transition">
                                 Add To Cart
                             </Button>
-                            <div className="grid grid-cols-2 gap-3">
-                                <Link href={route('menus.edit', menu.id)}>
-                                    <Button color="sekunder" className="w-full py-3 hover:bg-gray-200 transition">Edit</Button>
-                                </Link>
-                                <Button onClick={() => handleDelete(menu.id, menu.name)} className="w-full py-3 !bg-red-500 hover:!bg-red-600 !text-white transition shadow-sm border-none">
-                                    Hapus
-                                </Button>
-                            </div>
+                            {user.is_admin ? (
+                                <div className="grid grid-cols-2 gap-3">
+                                    <Link href={route('menus.edit', menu.id)}>
+                                        <Button color="sekunder" className="w-full py-3 hover:bg-gray-200 transition">Edit</Button>
+                                    </Link>
+                                    <Button onClick={() => handleDelete(menu.id, menu.name)} className="w-full py-3 !bg-red-500 hover:!bg-red-600 !text-white transition shadow-sm border-none">
+                                        Hapus
+                                    </Button>
+                                </div>
+                            ) : null}
                         </div>
                     </div>
                 </div>
