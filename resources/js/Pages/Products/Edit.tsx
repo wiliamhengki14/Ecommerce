@@ -1,11 +1,12 @@
 import { router, useForm } from "@inertiajs/react";
-import { FormEvent, useRef } from "react";
+import { FormEvent, useRef, useState } from "react";
 import Button from "@/Components/ui/Button/Button";
 import Input from "@/Components/ui/Input";
 import {Link} from "@inertiajs/react";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import {Head} from "@inertiajs/react";
 import Select from "@/Components/ui/Select";
+import Modal from "@/Components/Modal";
 import { filter } from "./Create.constant";
 
 interface MenuType {
@@ -31,6 +32,7 @@ interface IndexMenu {
 }
 
 const Edit = ({menu}: IndexMenu) => {
+    const [orderModal, setOrderModal] = useState(false);
     const {data, setData, post, reset, processing, errors} = useForm<PropTypes>({
         _method: 'PUT',
         name: menu.name||"",

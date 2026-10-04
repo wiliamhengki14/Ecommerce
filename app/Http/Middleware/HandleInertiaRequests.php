@@ -34,6 +34,15 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'cart_count' => fn () => $request->user() 
+                ? \App\Models\Cart::where('user_id', $request->user()->id)->count() 
+                : 0,
+
+            'order_count' => fn () => $request->user()
+                ? \App\Models\Order::where('status', 'pending')
+                ->where('user_id', $request->user()->id)
+                ->count()
+                : 0,
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),
             ],

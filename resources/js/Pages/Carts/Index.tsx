@@ -1,6 +1,8 @@
 import { Head, router } from "@inertiajs/react";
 import Button from "@/Components/ui/Button/Button";
 import {Link} from "@inertiajs/react";
+import Modal from "@/Components/Modal";
+import { useState } from "react";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 interface MenuType {
     id: number;
@@ -33,7 +35,7 @@ interface IndexType {
 
 const Index = (props: IndexType) => {
     const { carts = [], user } = props;
-
+    const [orderModal, setOrderModal] = useState(false);
     const handleUpdateQuantity = (type: "increment" | "decrement", id: number) => {
         if(type === 'increment') {
             router.post(route('carts.add', id), {
@@ -170,9 +172,28 @@ const Index = (props: IndexType) => {
                                 <span className="font-extrabold text-xl md:text-2xl text-[#1c1c1c]">
                                     Rp {grandTotal.toLocaleString("id-ID")}
                                 </span>
+                                
                             </div>
-                            <Button className="w-full md:w-auto" onClick={handleOrder}>Order</Button>
+                            <Button onClick={() => setOrderModal(true)}>Order</Button>
+                            
                         </div>
+                        <Modal show={orderModal} onClose={() => setOrderModal(false)} maxWidth="sm">
+                                <div className="p-6">
+                                    <h2 className="text-lg font-extrabold text-[#1c1c1c]">Konfirmsi Order</h2>
+                                    <p className="mt-2 text-sm text-gray-600">
+                                        Apakah Anda yakin ingin menyelesaikan order ini dengan total pembayaran Rp {Number(grandTotal).toLocaleString('id-ID')}?
+                                    </p>
+                                    <div className="mt-6 flex justify-end gap-3">
+                                        <Button color="sekunder" onClick={() => setOrderModal(false)}>
+                                            Batal
+                                        </Button>
+                                        <Button color="primer" onClick={handleOrder}>
+                                            Ya, Order
+                                        </Button>
+                                    </div>
+                                </div>
+                                
+                            </Modal>
                         
                     </div>
                 )}
