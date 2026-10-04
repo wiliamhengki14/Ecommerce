@@ -4,6 +4,8 @@ import Button from "@/Components/ui/Button/Button";
 import Input from "@/Components/ui/Input";
 import {Link} from "@inertiajs/react";
 import { PageProps } from "@/types";
+import { User, Lock } from "lucide-react";
+import Checkbox from "@/Components/Checkbox";
 
 interface LoginProps {
     status?: string;
@@ -16,6 +18,7 @@ const Login = ({ status }: LoginProps) => {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: "",
         password: "",
+        remember: false,
     });
 
     // 2. Handler submit form menuju route auth Laravel
@@ -57,6 +60,7 @@ const Login = ({ status }: LoginProps) => {
                         placeholder="Masukkan Email"
                         value={data.email}
                         error={errors.email}
+                        icon={<User size={18} />}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData("email", e.target.value)}
                     />
 
@@ -69,8 +73,20 @@ const Login = ({ status }: LoginProps) => {
                         placeholder="Masukkan Password"
                         value={data.password}
                         error={errors.password}
+                        icon={<Lock size={18} />}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData("password", e.target.value)}
                     />
+
+                    <div className="flex items-center justify-between">
+                        <label className="flex items-center">
+                            <Checkbox
+                                name="remember"
+                                checked={data.remember}
+                                onChange={(e) => setData('remember', e.target.checked)}
+                            />
+                            <span className="ms-2 text-sm text-gray-600">Ingat saya</span>
+                        </label>
+                    </div>
 
                     <Button
                         type="submit"
