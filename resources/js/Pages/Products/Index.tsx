@@ -1,9 +1,14 @@
-import { Head, router, useForm } from "@inertiajs/react"
+import { Head, router, useForm, usePage } from "@inertiajs/react"
 import Button from "@/Components/ui/Button/Button"
 import { Link } from "@inertiajs/react"
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { filterIndex } from "./Create.constant";
 import Input from "@/Components/ui/Input";
+import Modal from "@/Components/Modal";
+import { Alert, AlertTitle, AlertDescription } from "@/Components/ui/Alert";
+import { CheckCircle2, AlertCircle, Timer } from "lucide-react";
+import { useState, useEffect } from 'react';
+import CustomerNavbar from "@/Components/CustomerNavbar";
 
 interface Menutype {
     id: number,
@@ -35,6 +40,7 @@ interface IndexMenu {
 }
 
 const Index = (props: IndexMenu) => {
+    const { flash } = usePage<any>().props;
     const { } = useForm;
     const { menus, kategori_aktif, user, carts = [] } = props;
     const handleFilter = (label: string) => {
@@ -58,41 +64,78 @@ const Index = (props: IndexMenu) => {
             })
         }
     }
+    const [isVisible, setIsVisible] = useState(false);
+
+    // 2. Gunakan useEffect untuk mendeteksi perubahan pada flash messages
+    useEffect(() => {
+        if(flash?.message || flash?.success || flash?.error) {
+            setIsVisible(true);
+            const timer = setTimeout(() => {
+                setIsVisible(false);
+            }, 3000);
+            
+            return () => clearTimeout(timer);
+        }
+    }, [flash?.message, flash?.success, flash?.error]);
+
+    const [showOrderModal, setShowOrderModal] = useState(false);
+    const [showCancelModal, setShowCancelModal] = useState(false);
 
     const handleOrder = () => {
-        if(confirm('Apakah anda ingin order?')) {
-            router.post(route('orders.order'), {}, {
-                preserveScroll: true,
-            });
-        }
+        router.post(route('orders.order'), {}, {
+            preserveScroll: true,
+            onSuccess: () => setShowOrderModal(false),
+        });
     }
     const handleDelete = () => {
-        if(confirm('Apakah ingin reset?')) {
-            router.delete(route('carts.remove'), {preserveScroll: true})
-        }
+        router.delete(route('carts.remove'), {
+            preserveScroll: true,
+            onSuccess: () => setShowCancelModal(false),
+        })
     }
     const totalAmount = carts.reduce((total, item) => {
         return total + (item.menu ? item.quantity * item.menu.price : 0);
     }, 0)
     return (
-        // <AuthenticatedLayout>
+        <div className="min-h-screen bg-gray-50">
+            <CustomerNavbar />
             <main className="p-4 md:p-4 flex flex-col md:flex-row gap-[32px] bg-white">
 
                 <Head title="Index" />
+                {/* Floating Alerts */}
+                <div className="fixed top-5 right-[40%] z-[100] flex flex-col gap-2 min-w-[300px] max-w-md transition-all duration-300">
+                    {isVisible && flash?.message && (
+                        <Alert variant="success" className="shadow-lg animate-in fade-in slide-in-from-top-5">
+                            <CheckCircle2 className="h-4 w-4" />
+                            <AlertTitle>Berhasil!</AlertTitle>
+                            <AlertDescription>
+                                {flash.message}
+                            </AlertDescription>
+                        </Alert>
+                    )}
+                    {isVisible && flash?.success && (
+                        <Alert variant="success" className="shadow-lg animate-in fade-in slide-in-from-top-5">
+                            <CheckCircle2 className="h-4 w-4" />
+                            <AlertTitle>Berhasil!</AlertTitle>
+                            <AlertDescription>
+                                {flash.success}
+                            </AlertDescription>
+                        </Alert>
+                    )}
+                    {isVisible && flash?.error && (
+                        <Alert variant="destructive" className="shadow-lg animate-in fade-in slide-in-from-top-5">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Gagal!</AlertTitle>
+                            <AlertDescription>
+                                {flash.error}
+                            </AlertDescription>
+                        </Alert>
+                    )}
+                </div>
+
                 <div className="md:w-[70%]">
                     <div className="flex justify-between items-center mb-2">
                         <h1 className="text-2xl md:text-[36px] font-extrabold mb-3">Explore Our Best Menu</h1>
-                        {/* <div className="flex gap-3">
-                            <Link href={route('menus.create')}>
-                                <Button color="primer">Tambah Produk</Button>
-                            </Link>
-                            <Link href={route('carts.index')}>
-                                <Button color="sekunder" className="w-[150px]">Cart</Button>
-                            </Link>
-                            <Link href={route('orders.index')}>
-                                <Button color="sekunder" className="w-[150px]">List Order</Button>
-                            </Link>
-                        </div> */}
                     </div>
 
                     <div className="flex gap-4 flex-wrap mb-7 mr-4 font-bold">
@@ -133,10 +176,10 @@ const Index = (props: IndexMenu) => {
 
                 </div>
                 <div className="md:w-[30%]">
-                    <div className="shadow-[0px_0px_4px_rgba(0,0,0,0.2)] flex flex-col p-5 sticky top-5 rounded-2xl h-fit">
+                    <div className="shadow-[0px_0px_4px_rgba(0,0,0,0.2)] flex flex-col p-5 sticky top-[100px] rounded-2xl h-fit max-h-[calc(100vh-120px)] overflow-y-auto">
                         <div className="flex items-center justify-between">
                             <h1 className="font-extrabold text-2xl">Customer Information</h1>
-                            <Button color="sekunder" onClick={handleDelete}>Cancel</Button>
+                            <Button color="sekunder" onClick={() => setShowCancelModal(true)}>Cancel</Button>
                         </div>
                         <div className="bg-[#ececec] p-5 rounded-3xl mt-5">
                             <h3 className="font-extrabold text-lg">Customer Name</h3>
@@ -173,15 +216,54 @@ const Index = (props: IndexMenu) => {
                                 <Link href={route('carts.index')} classID="w-full">
                                     <Button color="sekunder" className="w-full">Cart</Button>
                                 </Link>
-                                <Button onClick={handleOrder}>Order</Button>
-                                
+                                <Button onClick={() => setShowOrderModal(true)}>Order</Button>
                             </div>
                         ): ''} 
                     </div>
                 </div>
 
+                {/* Modal Konfirmasi Order */}
+                <Modal show={showOrderModal} onClose={() => setShowOrderModal(false)} maxWidth="sm">
+                    <div className="p-6">
+                        <h2 className="text-lg font-extrabold text-gray-900">
+                            Konfirmasi Order
+                        </h2>
+                        <p className="mt-2 text-sm text-gray-600">
+                            Apakah Anda yakin ingin menyelesaikan order ini dengan total pembayaran Rp {Number(totalAmount).toLocaleString('id-ID')}?
+                        </p>
+                        <div className="mt-6 flex justify-end gap-3">
+                            <Button color="sekunder" onClick={() => setShowOrderModal(false)}>
+                                Batal
+                            </Button>
+                            <Button color="primer" onClick={handleOrder}>
+                                Ya, Order
+                            </Button>
+                        </div>
+                    </div>
+                </Modal>
+
+                {/* Modal Konfirmasi Cancel */}
+                <Modal show={showCancelModal} onClose={() => setShowCancelModal(false)} maxWidth="sm">
+                    <div className="p-6">
+                        <h2 className="text-lg font-extrabold text-red-600">
+                            Batalkan Keranjang
+                        </h2>
+                        <p className="mt-2 text-sm text-gray-600">
+                            Apakah Anda yakin ingin mengosongkan semua isi keranjang? Tindakan ini tidak dapat dibatalkan.
+                        </p>
+                        <div className="mt-6 flex justify-end gap-3">
+                            <Button color="sekunder" onClick={() => setShowCancelModal(false)}>
+                                Kembali
+                            </Button>
+                            <Button className="bg-red-600 text-white hover:bg-red-700" onClick={handleDelete}>
+                                Ya, Kosongkan
+                            </Button>
+                        </div>
+                    </div>
+                </Modal>
+
             </main>
-            // </AuthenticatedLayout>
+        </div>
     )
 }
 

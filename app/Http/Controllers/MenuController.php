@@ -22,9 +22,17 @@ class MenuController extends Controller
             ->get();
         // Ambil query string 'Kategori' atau 'kategori'
         $kategori = $request->query('Kategori') ?? $request->query('kategori');
+        $search = $request->query('search');
         
         if ($kategori && $kategori !== 'All') {
             $query->where('kategori', $kategori);
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%');
+            });
         }
 
         $menus = $query->get()->map(function ($menu) {

@@ -1,4 +1,4 @@
-
+import { User, Lock } from "lucide-react";
 import React, { FormEvent, ReactNode } from "react";
 import Input from "@/Components/ui/Input";
 import Button from "@/Components/ui/Button/Button";
@@ -35,6 +35,7 @@ const Register = () => {
                         placeholder="Masukkan Nama"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData('name', e.target.value)}
                         error={errors.name}
+                        icon={<User size={18} />}
                         value={data.name}
                     />
                     <Input 
@@ -43,6 +44,7 @@ const Register = () => {
                         label="Email" 
                         placeholder="Masukkan Email"
                         required
+                        icon={<User size={18} />}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData('email', e.target.value)}
                         error={errors.email}
                         value={data.email}
@@ -53,6 +55,7 @@ const Register = () => {
                         label="Password" 
                         type="password" 
                         required 
+                        icon={<Lock size={18} />}
                         placeholder="Masukkan Password" 
                         value={data.password}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData('password', e.target.value)}
@@ -65,6 +68,7 @@ const Register = () => {
                         placeholder="Konfirmasi Password"
                         type="password"
                         required
+                        icon={<Lock size={18} />}
                         value={data.password_confirmation}
                         error={errors.password_confirmation}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData('password_confirmation', e.target.value)}
