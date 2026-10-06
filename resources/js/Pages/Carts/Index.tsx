@@ -3,6 +3,7 @@ import Button from "@/Components/ui/Button/Button";
 import {Link} from "@inertiajs/react";
 import Modal from "@/Components/Modal";
 import { useState } from "react";
+import CustomerNavbar2 from "@/Components/CustomerNavbar2";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 interface MenuType {
     id: number;
@@ -66,7 +67,8 @@ const Index = (props: IndexType) => {
     }, 0);
 
     return (
-        <AuthenticatedLayout>
+        <div className="min-h-screen bg-gray-50">
+            <CustomerNavbar2 />
         <main className="p-4 md:p-8 min-h-screen bg-slate-50">
             <Head title="Cart" />
 
@@ -199,7 +201,7 @@ const Index = (props: IndexType) => {
                 )}
             </div>
         </main>
-        </AuthenticatedLayout>
+        </div>
     );
 };
 

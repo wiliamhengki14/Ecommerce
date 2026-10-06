@@ -12,8 +12,9 @@ use Inertia\Response;
 
 class CartController extends Controller
 {
-    // add 
-    public function add(Menu $menu, Request $request) {
+    // add
+    public function add(Menu $menu, Request $request)
+    {
         $menu_id = $menu->id;
         $user_id = Auth::id();
 
@@ -21,9 +22,9 @@ class CartController extends Controller
         $existingCart = Cart::where('menu_id', $menu_id)
             ->where('user_id', $user_id)
             ->first();
-        if($existingCart == null) {
+        if ($existingCart == null) {
             $validasi = $request->validate([
-                'quantity' => 'required|gte:1|lte:' . $menu->stock,
+                'quantity' => 'required|gte:1|lte:'.$menu->stock,
             ]);
             Cart::create([
                 'user_id' => $user_id,
@@ -32,47 +33,77 @@ class CartController extends Controller
             ]);
         } else {
             $validasi = $request->validate([
-                'quantity' => 'required|gte:1|lte:' . ($menu->stock - $existingCart->quantity),
+                'quantity' => 'required|gte:1|lte:'.($menu->stock - $existingCart->quantity),
             ]);
             $existingCart->update([
                 'quantity' => $validasi['quantity'] + $existingCart->quantity,
             ]);
         }
-        return Redirect::back()->with('message', 'Data berhasil di tambahkann');
+
+        return Redirect::route('menus.index')->with('message', 'Data berhasil di tambahkann');
     }
 
     // index
-    public function index(): Response {
+    public function index(): Response
+    {
         $user = Auth::user();
         $carts = Cart::with(['menu'], ['user'])->where('user_id', $user->id)
             ->get();
+
         return Inertia::render('Carts/Index', [
             'carts' => $carts,
             'user' => $user,
         ]);
     }
 
-    // decrement 
-    public function decrement(Menu $menu) {
+    // incremet
+    public function increment(Menu $menu, Request $request)
+    {
+        $user_id = Auth::id();
+        $menu_id = $menu->id;
+
+        $existingCart = Cart::where('user_id', $user_id)
+            ->where('menu_id', $menu_id)
+            ->first();
+        if ($existingCart == null) {
+            return Redirect::back();
+        } else {
+            $validasi = $request->validate([
+                'quantity' => 'required|gte:1|lte:'.($menu->stock - $existingCart->quantity),
+            ]);
+            $existingCart->update([
+                'quantity' => $validasi['quantity'] + $existingCart->quantity,
+            ]);
+        }
+
+        return Redirect::back();
+    }
+
+    // decrement
+    public function decrement(Menu $menu)
+    {
         $user_id = Auth::id();
         $menu_id = $menu->id;
 
         $existingCart = Cart::where('menu_id', $menu_id)
             ->where('user_id', $user_id)
             ->first();
-        if($existingCart->quantity <= 1) {
+        if ($existingCart->quantity <= 1) {
             $existingCart->delete();
-        }else {
+        } else {
             $existingCart->update([
                 'quantity' => $existingCart->quantity - 1,
             ]);
         }
+
         return Redirect::back();
     }
 
-    public function remove() {
+    public function remove()
+    {
         $user_id = Auth::id();
         Cart::where('user_id', $user_id)->delete();
+
         return Redirect::route('menus.index');
     }
 }

@@ -9,6 +9,8 @@ import { Alert, AlertTitle, AlertDescription } from "@/Components/ui/Alert";
 import { CheckCircle2, AlertCircle, Timer } from "lucide-react";
 import { useState, useEffect } from 'react';
 import CustomerNavbar from "@/Components/CustomerNavbar";
+import FloatingChatWidget from "@/Components/FloatingChatWidget";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs"
 
 interface Menutype {
     id: number,
@@ -49,14 +51,20 @@ const Index = (props: IndexMenu) => {
             preserveScroll: true,
         })
     }
-    const handleIncrement = (type: 'increment' | 'decrement', id: number) => {
-        if(type === 'increment') {
+    const handleIncrement = (type: 'increment' | 'decrement' | 'add', id: number) => {
+        if (type === 'add') {
             router.post(route('carts.add', id), {
                 quantity: 1,
             }, {
                 preserveScroll: true
             })
-        }else {
+        }
+        else if (type === 'increment') {
+            router.put(route('carts.increment', id), { quantity: 1 }, {
+                preserveScroll: true,
+            });
+        }
+        else {
             router.post(route('carts.decrement', id), {
                 quantity: 1,
             }, {
@@ -68,12 +76,12 @@ const Index = (props: IndexMenu) => {
 
     // 2. Gunakan useEffect untuk mendeteksi perubahan pada flash messages
     useEffect(() => {
-        if(flash?.message || flash?.success || flash?.error) {
+        if (flash?.message || flash?.success || flash?.error) {
             setIsVisible(true);
             const timer = setTimeout(() => {
                 setIsVisible(false);
             }, 3000);
-            
+
             return () => clearTimeout(timer);
         }
     }, [flash?.message, flash?.success, flash?.error]);
@@ -103,7 +111,7 @@ const Index = (props: IndexMenu) => {
 
                 <Head title="Index" />
                 {/* Floating Alerts */}
-                <div className="fixed top-5 right-[40%] z-[100] flex flex-col gap-2 min-w-[300px] max-w-md transition-all duration-300">
+                <div className="fixed top-15 right-[40%] z-[100] flex flex-col gap-2 min-w-[300px] max-w-md transition-all duration-300">
                     {isVisible && flash?.message && (
                         <Alert variant="success" className="shadow-lg animate-in fade-in slide-in-from-top-5">
                             <CheckCircle2 className="h-4 w-4" />
@@ -145,9 +153,9 @@ const Index = (props: IndexMenu) => {
                             const isSelected = kategoriAktif === item;
 
                             return (
-                                <Button 
-                                    key={item} 
-                                    onClick={() => handleFilter(item)} 
+                                <Button
+                                    key={item}
+                                    onClick={() => handleFilter(item)}
                                     color={isSelected ? "primer" : "sekunder"}
                                     className="font-bold"
                                 >
@@ -191,7 +199,7 @@ const Index = (props: IndexMenu) => {
                         <div className="bg-[#ececec] p-5 mt-3 rounded-2xl mb-4 flex flex-col">
                             {carts.length === 0 ? (
                                 <h3 className="text-center font-bold text-lg">Cart is empty</h3>
-                            ): (
+                            ) : (
                                 <div className="flex flex-col">
                                     {carts.map((item) => (
                                         <div className="flex items-center justify-between">
@@ -209,7 +217,7 @@ const Index = (props: IndexMenu) => {
                                     </div>
                                 </div>
                             )}
-                            
+
                         </div>
                         {carts.length >= 1 ? (
                             <div className="grid grid-cols-2 gap-4">
@@ -218,27 +226,79 @@ const Index = (props: IndexMenu) => {
                                 </Link>
                                 <Button onClick={() => setShowOrderModal(true)}>Order</Button>
                             </div>
-                        ): ''} 
+                        ) : ''}
                     </div>
                 </div>
 
                 {/* Modal Konfirmasi Order */}
                 <Modal show={showOrderModal} onClose={() => setShowOrderModal(false)} maxWidth="sm">
-                    <div className="p-6">
-                        <h2 className="text-lg font-extrabold text-gray-900">
+                    <div className="p-6 flex flex-col">
+                        <h2 className="text-lg font-extrabold text-gray-900 mb-4">
                             Konfirmasi Order
                         </h2>
-                        <p className="mt-2 text-sm text-gray-600">
-                            Apakah Anda yakin ingin menyelesaikan order ini dengan total pembayaran Rp {Number(totalAmount).toLocaleString('id-ID')}?
-                        </p>
-                        <div className="mt-6 flex justify-end gap-3">
-                            <Button color="sekunder" onClick={() => setShowOrderModal(false)}>
-                                Batal
-                            </Button>
-                            <Button color="primer" onClick={handleOrder}>
-                                Ya, Order
-                            </Button>
-                        </div>
+                        <Tabs defaultValue="cash" className="w-full flex flex-col">
+                            <TabsList className="grid w-full grid-cols-2 mb-4 p-1 bg-gray-100 rounded-lg">
+                                <TabsTrigger 
+                                    value="cash" 
+                                    className="border-2 border-transparent data-active:border-[#1c1c1c] data-active:shadow-sm"
+                                >
+                                    Cash
+                                </TabsTrigger>
+                                <TabsTrigger 
+                                    value="qris" 
+                                    className="border-2 border-transparent data-active:border-[#1c1c1c] data-active:shadow-sm"
+                                >
+                                    QRIS
+                                </TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="cash">
+                                <p className="text-sm text-gray-600 text-center">
+                                    Apakah Anda yakin ingin menyelesaikan order ini secara tunai (cash)?<br/>
+                                    Total pembayaran: <span className="font-bold text-gray-900">Rp {Number(totalAmount).toLocaleString('id-ID')}</span>
+                                </p>
+                                <div className="mt-6 flex justify-end gap-3">
+                                    <Button color="sekunder" onClick={() => setShowOrderModal(false)}>
+                                        Batal
+                                    </Button>
+                                    <Button color="primer" onClick={handleOrder}>
+                                        Ya, Order
+                                    </Button>
+                                </div>
+                            </TabsContent>
+                            <TabsContent value="qris">
+                                <div className="flex flex-col items-center justify-center space-y-3">
+                                    <p className="text-sm text-gray-600 text-center">
+                                        Scan QR Code berikut untuk membayar senilai:<br/>
+                                        <span className="text-xl font-bold text-gray-900">Rp {Number(totalAmount).toLocaleString('id-ID')}</span>
+                                    </p>
+                                    <div className="bg-white p-3 rounded-xl border-2 border-gray-200 shadow-sm inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-800">
+                                            <rect width="5" height="5" x="3" y="3" rx="1"/>
+                                            <rect width="5" height="5" x="16" y="3" rx="1"/>
+                                            <rect width="5" height="5" x="3" y="16" rx="1"/>
+                                            <path d="M21 16h-3a2 2 0 0 0-2 2v3"/>
+                                            <path d="M21 21v.01"/>
+                                            <path d="M12 7v3a2 2 0 0 1-2 2H7"/>
+                                            <path d="M3 12h.01"/>
+                                            <path d="M12 3h.01"/>
+                                            <path d="M12 16v.01"/>
+                                            <path d="M16 12h1"/>
+                                            <path d="M21 12v.01"/>
+                                            <path d="M12 21v-1"/>
+                                        </svg>
+                                    </div>
+                                    <p className="text-xs text-gray-500 text-center">Buka aplikasi e-Wallet atau M-Banking Anda untuk melakukan pembayaran.</p>
+                                </div>
+                                <div className="mt-6 flex justify-end gap-3">
+                                    <Button color="sekunder" onClick={() => setShowOrderModal(false)}>
+                                        Batal
+                                    </Button>
+                                    <Button color="primer" onClick={handleOrder}>
+                                        Sudah Bayar & Order
+                                    </Button>
+                                </div>
+                            </TabsContent>
+                        </Tabs>
                     </div>
                 </Modal>
 
@@ -261,6 +321,9 @@ const Index = (props: IndexMenu) => {
                         </div>
                     </div>
                 </Modal>
+
+                {/* Floating AI Chat Widget */}
+                <FloatingChatWidget />
 
             </main>
         </div>
