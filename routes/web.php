@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AiChatController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
@@ -25,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('menus/{menu}', [MenuController::class, 'detail'])->name('menus.detail');
     // cart
     Route::post('/carts/{menu}', [CartController::class, 'add'])->name('carts.add');
+    Route::put('/carts/{menu}', [CartController::class, 'increment'])->name('carts.increment');
     Route::post('/carts/{menu}/decrement', [CartController::class, 'decrement'])->name('carts.decrement');
     Route::delete('/menus/delete', [CartController::class, 'remove'])->name('carts.remove');
     Route::get('/carts', [CartController::class, 'index'])->name('carts.index');
@@ -34,6 +36,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}/show', [OrderController::class, 'show'])->name('orders.show');
     Route::put('/orders/{order}/completed', [OrderController::class, 'completed'])->name('orders.completed');
+
+    // AI Chat
+    Route::post('/ai-chat', [AiChatController::class, 'chat'])->name('ai-chat');
 });
 
 require __DIR__.'/auth.php';

@@ -1,5 +1,5 @@
 import { Link, usePage, router } from '@inertiajs/react';
-import { ShoppingCart, Search, Menu, User, ClipboardList, LogOut, Store, X } from 'lucide-react';
+import { ShoppingCart, Search, Menu, User, ClipboardList, LogOut, Store } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import ApplicationLogo from './ApplicationLogo';
 import Modal from './Modal';
@@ -9,32 +9,8 @@ export default function CustomerNavbar() {
     const { auth, cart_count, order_count } = usePage().props as any;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const initialSearch = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('search') || '' : '';
-    const [searchQuery, setSearchQuery] = useState(initialSearch);
+
     const [showLogout, setShowLogout] = useState(false);
-
-    const isFirstRender = useRef(true);
-
-    useEffect(() => {
-        if (isFirstRender.current) {
-            isFirstRender.current = false;
-            return;
-        }
-
-        const delayDebounceFn = setTimeout(() => {
-            router.get(
-                route('menus.index'),
-                { search: searchQuery },
-                { preserveState: true, preserveScroll: true, replace: true }
-            );
-        }, 400);
-
-        return () => clearTimeout(delayDebounceFn);
-    }, [searchQuery]);
-
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-        router.get(route('menus.index'), { search: searchQuery }, { preserveState: true, preserveScroll: true, replace: true });
-    };
 
     const handleLogout = () => {
         router.post(route('logout'), {}, {
@@ -51,28 +27,9 @@ export default function CustomerNavbar() {
                         <Link href="/" className="flex items-center gap-3">
                             <img src="/storage/Logo/logo.png" alt="Logo Nama Perusahaan Anda" className='h-14 mr-0 bg-transparent'/>
                             <span className="font-extrabold text-2xl tracking-tight text-gray-900 hidden sm:block">
-                                wiliam<span className="text-indigo-600">Cafe</span>
+                                Wiliam<span className="text-indigo-600">Jaya</span>
                             </span>
                         </Link>
-                    </div>
-
-                    {/* Search Bar (Desktop) */}
-                    <div className="hidden md:flex flex-1 max-w-2xl mx-8">
-                        <form onSubmit={handleSearch} className="relative w-full group">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <Search className="h-5 w-5 text-gray-400 group-focus-within:text-[#1c1c1c] transition-colors" />
-                            </div>
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="block w-full pl-12 pr-4 py-3 border-gray-200 rounded-full leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all duration-300 shadow-inner"
-                                placeholder="Cari produk, kategori, atau merek..."
-                            />
-                            <button type="submit" className="absolute inset-y-1.5 right-1.5 px-4 bg-[#1c1c1c] hover:bg-indigo-700 text-white text-sm font-medium rounded-full transition-colors">
-                                Cari
-                            </button>   
-                        </form>
                     </div>
 
                     {/* Right Navigation */}
@@ -124,7 +81,7 @@ export default function CustomerNavbar() {
                         </div>
                         <Modal show={showLogout} onClose={() => setShowLogout(false)} maxWidth='sm'>
                             <div className='p-6'>
-                                <div className='flex items-center justify-between'>
+                                <div>
                                     <h2 className='font-extrabold text-red-800 text-2xl mb-2'>Konfirmasi Logout</h2>
                                 </div>
                                 <p className='text-[#1c1c1c]'>Apakah anda ingin logout?</p>
@@ -151,7 +108,7 @@ export default function CustomerNavbar() {
             {/* Mobile Menu Dropdown */}
             <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-96 border-t border-gray-100' : 'max-h-0'}`}>
                 <div className="bg-white px-4 pt-4 pb-6 space-y-4 shadow-inner">
-                    <form onSubmit={handleSearch} className="relative">
+                    {/* <form onSubmit={handleSearch} className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <Search className="h-5 w-5 text-gray-400" />
                         </div>
@@ -162,7 +119,7 @@ export default function CustomerNavbar() {
                             className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white"
                             placeholder="Cari produk..."
                         />
-                    </form>
+                    </form> */}
                     
                     {!auth?.user ? (
                         <div className="flex flex-col gap-3 pt-2">
