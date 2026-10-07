@@ -13,11 +13,13 @@ class Cart extends Model
         'quantity',
     ];
 
-    public function menu() {
+    public function menu()
+    {
         return $this->belongsTo(Menu::class);
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

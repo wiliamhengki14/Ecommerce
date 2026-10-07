@@ -43,7 +43,8 @@ interface IndexMenu {
 
 const Index = (props: IndexMenu) => {
     const { flash } = usePage<any>().props;
-    const { } = useForm;
+    
+    // const {errors } = useForm<any>();
     const { menus, kategori_aktif, user, carts = [] } = props;
     const handleFilter = (label: string) => {
         router.get(route('menus.index'), { Kategori: label }, {
@@ -62,6 +63,7 @@ const Index = (props: IndexMenu) => {
         else if (type === 'increment') {
             router.put(route('carts.increment', id), { quantity: 1 }, {
                 preserveScroll: true,
+                preserveState: true,
             });
         }
         else {
@@ -69,6 +71,7 @@ const Index = (props: IndexMenu) => {
                 quantity: 1,
             }, {
                 preserveScroll: true,
+                preserveState: true,
             })
         }
     }
@@ -104,6 +107,7 @@ const Index = (props: IndexMenu) => {
     const totalAmount = carts.reduce((total, item) => {
         return total + (item.menu ? item.quantity * item.menu.price : 0);
     }, 0)
+    
     return (
         <div className="min-h-screen bg-gray-50">
             <CustomerNavbar />
@@ -187,7 +191,7 @@ const Index = (props: IndexMenu) => {
                     <div className="shadow-[0px_0px_4px_rgba(0,0,0,0.2)] flex flex-col p-5 sticky top-[100px] rounded-2xl h-fit max-h-[calc(100vh-120px)] overflow-y-auto">
                         <div className="flex items-center justify-between">
                             <h1 className="font-extrabold text-2xl">Customer Information</h1>
-                            <Button color="sekunder" onClick={() => setShowCancelModal(true)}>Cancel</Button>
+                            <Button color="sekunder" onClick={() => setShowCancelModal(true)} disabled={carts.length == 0}>Cancel</Button>
                         </div>
                         <div className="bg-[#ececec] p-5 rounded-3xl mt-5">
                             <h3 className="font-extrabold text-lg">Customer Name</h3>
@@ -207,7 +211,7 @@ const Index = (props: IndexMenu) => {
                                             <div className="flex items-center gap-6 mb-2">
                                                 <Button onClick={() => handleIncrement('decrement', item.menu_id)} className="w-8 h-8">-</Button>
                                                 <p className="font-extrabold">{item.quantity}</p>
-                                                <Button onClick={() => handleIncrement('increment', item.menu_id)} className="w-8 h-8">+</Button>
+                                                <Button onClick={() => handleIncrement('increment', item.menu_id)} className="w-8 h-8" disabled={item.quantity >= item.menu.stock}>+</Button>
                                             </div>
                                         </div>
                                     ))}
@@ -224,7 +228,7 @@ const Index = (props: IndexMenu) => {
                                 <Link href={route('carts.index')} classID="w-full">
                                     <Button color="sekunder" className="w-full">Cart</Button>
                                 </Link>
-                                <Button onClick={() => setShowOrderModal(true)}>Order</Button>
+                                <Button onClick={() => setShowOrderModal(true)} className="w-full">Order</Button>
                             </div>
                         ) : ''}
                     </div>

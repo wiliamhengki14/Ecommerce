@@ -64,6 +64,23 @@ class OrderController extends Controller
         return Inertia::render('Orders/Index', ['orders' => $orders, 'user' => $user]);
     }
 
+    public function adminIndex(): Response
+    {
+        $orders = Order::with('user')->latest()->get();
+        return Inertia::render('Admin/Orders/Index', ['orders' => $orders]);
+    }
+
+    public function adminShow(Order $order): Response
+    {
+        $order->load('user');
+        $orderItems = OrderItem::with('menu')->where('order_id', $order->id)->get();
+        
+        return Inertia::render('Admin/Orders/Show', [
+            'order' => $order,
+            'orderItems' => $orderItems
+        ]);
+    }
+
     public function show(Order $order)
     {
         $user = Auth::user();

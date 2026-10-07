@@ -3,7 +3,7 @@ import Input from "@/Components/ui/Input";
 import Button from "@/Components/ui/Button/Button";
 import { FormEvent, useRef } from "react";
 import {Link} from "@inertiajs/react";
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import AdminLayout from '@/Layouts/AdminLayout';
 import Select from "@/Components/ui/Select";
 import { filter } from "./Create.constant";
 
@@ -36,10 +36,8 @@ const Create = () => {
     }
 
     return (
-        <AuthenticatedLayout>
-        <main className="p-5 flex flex-col justify-center items-center h-[100vh]">
-            <Head title="Create"/>
-            <div className="flex flex-col shadow-[0px_0px_4px_rgba(0,0,0,0.2)] p-5 rounded-2xl gap-2 w-full md:w-[50%] md:mt-5 mt-7">
+        <AdminLayout title="Tambah Produk">
+            <div className="flex flex-col shadow-[0px_0px_4px_rgba(0,0,0,0.2)] p-5 rounded-2xl gap-2 w-full max-w-2xl mx-auto bg-white">
                 <h1 className="text-center font-bold text-[24px]">Halaman Tambah Product</h1>
                 <form onSubmit={handleSubmit} className="mt-3 p-3 flex flex-col gap-3">
                     <Input 
@@ -111,15 +109,14 @@ const Create = () => {
                         }}
                         className="file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-[#1c1c1c] file:text-white hover:file:bg-[#333333] cursor-pointer"
                     />
-                    <Button type="submit" color="primer" disabled={processing}>{processing ? 'Memproses...' : 'Tambah'}</Button>
+                    <Button type="submit" color="primer" className="w-full" disabled={processing}>{processing ? 'Memproses...' : 'Tambah'}</Button>
                 </form>
                 <div className="flex flex-col justify-center items-center">
-                    <Link href={route('menus.index')} className="text-center py-1 px-2 border border-[#1c1c1c] w-[100px] rounded-[14px]">Ke Menu</Link>
+                    <Link href={route('admin.menus.index')} className="text-center py-1 px-2 border border-[#1c1c1c] w-[100px] rounded-[14px]">Ke Menu</Link>
                 </div>
                 
             </div>
-        </main>
-        </AuthenticatedLayout>
+        </AdminLayout>
     )
 }
 

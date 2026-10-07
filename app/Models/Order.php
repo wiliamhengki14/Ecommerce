@@ -14,10 +14,14 @@ class Order extends Model
         'status',
         'notes',
     ];
-    public function user() {
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
-    } 
-    public function orderItems() {
+    }
+
+    public function orderItems()
+    {
         return $this->hasMany(OrderItem::class);
     }
 }

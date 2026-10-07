@@ -8,6 +8,7 @@ class OrderItem extends Model
 {
     //
     protected $table = 'item_orders';
+
     protected $fillable = [
         'order_id',
         'menu_id',
@@ -15,10 +16,13 @@ class OrderItem extends Model
         'price',
     ];
 
-    public function order() {
+    public function order()
+    {
         return $this->belongsTo(Order::class);
     }
-    public function menu() {
+
+    public function menu()
+    {
         return $this->belongsTo(Menu::class);
     }
 }

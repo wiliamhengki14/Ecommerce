@@ -6,10 +6,11 @@ import Modal from './Modal';
 import Button from './ui/Button/Button';
 
 export default function CustomerNavbar() {
-    const { auth, cart_count, order_count } = usePage().props as any;
+    const { auth, cart_count, order_count, order_count_admin } = usePage().props as any;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const initialSearch = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('search') || '' : '';
     const [searchQuery, setSearchQuery] = useState(initialSearch);
+    
     const [showLogout, setShowLogout] = useState(false);
 
     const isFirstRender = useRef(true);
@@ -91,10 +92,16 @@ export default function CustomerNavbar() {
                         </Link>
                         <Link href="/orders" className="relative p-2 text-gray-600 hover:text-indigo-600 transition-colors">
                             <ClipboardList className="h-6 w-6" />
-                            {order_count > 0 && (
+                            {!auth.user.is_admin && order_count > 0 ? (
                                 <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-rose-500 rounded-full shadow-sm">
                                     {order_count}
                                 </span>
+                            ) : auth.user.is_admin && order_count_admin > 0 ? (
+                                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-rose-500 rounded-full shadow-sm">
+                                    {order_count_admin}
+                                </span>
+                            ) : (
+                                <span></span>
                             )}
                         </Link>
 
@@ -102,7 +109,7 @@ export default function CustomerNavbar() {
                         <div className="hidden sm:flex items-center space-x-4 border-l border-gray-200 pl-6">
                             {auth?.user ? (
                                 <div className='flex items-center gap-3'>
-                                    <Link href={route('menus.index')} className="flex items-center gap-3 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors group">
+                                    <Link href={route('profile.edit')} className="flex items-center gap-3 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors group">
                                         <div className="h-10 w-10 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-700 font-bold group-hover:bg-indigo-100 transition-colors">
                                             {auth.user.name.charAt(0).toUpperCase()}
                                         </div>

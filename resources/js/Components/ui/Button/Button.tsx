@@ -9,6 +9,7 @@ interface PropTypes extends ButtonHTMLAttributes<HTMLButtonElement> {
     children?: ReactNode;
     type?: 'submit' | 'reset' | 'button';
     color?: 'primer' | 'sekunder';
+    error?: string;
 }
 
 const Button = ({
@@ -19,6 +20,7 @@ const Button = ({
     type = 'button',
     color = 'primer',
     children,
+    error,
     disabled,
     ...props
 }: PropTypes) => {
@@ -32,17 +34,24 @@ const Button = ({
     };
 
     return (
-        <button
-            type={type}
-            name={name}
-            id={id}
-            disabled={disabled}
-            className={`${baseStyle} ${colorStyle[color]} ${className}`}
-            {...props}
-        >
-            {/* Menampilkan children jika ada, jika tidak ada fallback ke prop label */}
-            {children || label}
-        </button>
+        <div>
+            <button
+                type={type}
+                name={name}
+                id={id}
+                disabled={disabled}
+                className={`${baseStyle} ${colorStyle[color]} ${className}`}
+                {...props}
+            >
+                {/* Menampilkan children jika ada, jika tidak ada fallback ke prop label */}
+                {children || label}
+            </button>
+            {error && (
+                <span className="text-red-400">
+                    {error}
+                </span>
+            )}
+        </div>
     );
 };
 

@@ -2,7 +2,17 @@ import { Head, router, usePage } from "@inertiajs/react";
 import {Link} from "@inertiajs/react";
 import Button from "@/Components/ui/Button/Button";
 import CustomerNavbar2 from "@/Components/CustomerNavbar2";
-import Modal from "@/Components/Modal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/Components/ui/alert-dialog"
 import { useState } from "react";
 interface IUser {
     id: number;
@@ -75,22 +85,26 @@ const Index = (props: IndexTypes) => {
                                                         <Button className="!px-3 !py-1.5 text-xs">Detail</Button>
                                                     </Link>
                                                     {item.status === 'pending' && user.is_admin ? (
-                                                        <Button 
+                                                        <AlertDialog>
+                                                            <AlertDialogTrigger render={<Button 
                                                             className="!px-3 !py-1.5 text-xs"
-                                                            onClick={() => handleComplete(item.id, 'completed')}
+                                                            
                                                         >
                                                             Completed
-                                                        {/* <Modal show={isVisible} onClose={() => setVisible(false)} maxWidth="sm">
-                                                            <div className="bg-white p-6">
-                                                                <h1 className="font-extrabold text-xl">Konfirmasi Pembayaran</h1>
-                                                                <p className="mt-3 text-slate-800">Apakah sudah melakukan pembayaran?</p>
-                                                                <div className="flex gap-3 justify-end items-center mt-4">
-                                                                    <Button color="sekunder" onClick={() => setVisible(false)}>Cancel</Button>
-                                                                    <Button color="primer" onClick={() => handleComplete(item.id, 'completed')}>Completed</Button>
-                                                                </div>
-                                                            </div>             
-                                                        </Modal> */}
-                                                        </Button>
+                                                        </Button>} />
+                                                            <AlertDialogContent>
+                                                                <AlertDialogHeader>
+                                                                <AlertDialogTitle>Apakah sudah membayar?</AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    Ini akan mengubah status pembayaran menjadi "Completed" yang artinya pembayaran telah di selesaikan?
+                                                                </AlertDialogDescription>
+                                                                </AlertDialogHeader>
+                                                                <AlertDialogFooter>
+                                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                                <AlertDialogAction onClick={() => handleComplete(item.id, 'completed')}>Continue</AlertDialogAction>
+                                                                </AlertDialogFooter>
+                                                            </AlertDialogContent>
+                                                        </AlertDialog>
                                                     ) : null}
                                                 </div>
                                                 

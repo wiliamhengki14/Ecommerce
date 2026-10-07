@@ -3,6 +3,19 @@ import {Link} from "@inertiajs/react";
 import Button from "@/Components/ui/Button/Button";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import CustomerNavbar2 from "@/Components/CustomerNavbar2";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogMedia,
+  AlertDialogTrigger,
+} from "@/Components/ui/alert-dialog"
+import { Trash2Icon } from "lucide-react"
 
 interface MenuType {
     id: number;
@@ -21,12 +34,10 @@ const Detail = (props: IndexTypes) => {
     const user = auth.user;
     
     const handleDelete = (id: number, name: string) => {
-        if(confirm(`Apakah anda ingin hapus ${name}?`)) {
-            router.delete(route('menus.delete', id), {
-                preserveScroll: true,
-                onSuccess: () => {}
-            })
-        }
+        router.delete(route('menus.delete', id), {
+            preserveScroll: true,
+            onSuccess: () => {}
+        })
     }
 
     const handleCart = (id: number) => {
@@ -89,9 +100,30 @@ const Detail = (props: IndexTypes) => {
                                         <Link href={route('menus.edit', menu.id)}>
                                             <Button color="sekunder" className="w-full py-3 hover:bg-gray-200 transition">Edit</Button>
                                         </Link>
-                                        <Button onClick={() => handleDelete(menu.id, menu.name)} className="w-full py-3 !bg-red-500 hover:!bg-red-600 !text-white transition shadow-sm border-none">
-                                            Hapus
-                                        </Button>
+                                        
+                                        <AlertDialog>
+                                            <AlertDialogTrigger
+                                                render={<Button className="w-full py-3 !bg-red-500 hover:!bg-red-600 !text-white transition shadow-sm border-none">
+                                                    Hapus
+                                                </Button>}
+                                            />
+                                            <AlertDialogContent size="sm">
+                                                <AlertDialogHeader>
+                                                <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                                                    <Trash2Icon />
+                                                </AlertDialogMedia>
+                                                <AlertDialogTitle>Delete chat?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    This will permanently delete this chat conversation. View{" "}
+                                                    <a href="#">Settings</a> delete any memories saved during this chat.
+                                                </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction onClick={() => handleDelete(menu.id, menu.name)} className="bg-red-500 hover:bg-red-400">Delete</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                            </AlertDialog>
                                     </div>
                                 ) : null}
                             </div>

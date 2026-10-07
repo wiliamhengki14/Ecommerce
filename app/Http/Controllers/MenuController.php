@@ -23,15 +23,15 @@ class MenuController extends Controller
         // Ambil query string 'Kategori' atau 'kategori'
         $kategori = $request->query('Kategori') ?? $request->query('kategori');
         $search = $request->query('search');
-        
+
         if ($kategori && $kategori !== 'All') {
             $query->where('kategori', $kategori);
         }
 
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('description', 'like', '%' . $search . '%');
+                $q->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('description', 'like', '%'.$search.'%');
             });
         }
 
@@ -48,6 +48,23 @@ class MenuController extends Controller
         });
 
         return Inertia::render('Products/Index', ['menus' => $menus, 'kategori_aktif' => $kategori, 'user' => $user, 'carts' => $carts]);
+    }
+
+    public function adminIndex(): Response
+    {
+        $menus = Menu::latest()->get()->map(function ($menu) {
+            return [
+                'id' => $menu->id,
+                'name' => $menu->name,
+                'description' => $menu->description,
+                'price' => $menu->price,
+                'stock' => $menu->stock,
+                'kategori' => $menu->kategori,
+                'image_url' => $menu->image ? asset('storage/'.$menu->image) : null,
+            ];
+        });
+
+        return Inertia::render('Admin/Menus/Index', ['menus' => $menus]);
     }
 
     public function create(): Response
