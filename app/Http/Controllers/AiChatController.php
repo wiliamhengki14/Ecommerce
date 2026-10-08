@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Menu;
+use App\Models\Order;
 use App\Models\OrderItem;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -68,11 +70,42 @@ class AiChatController extends Controller
         }
         $menusContext = implode("\n", $menuList);
 
-        $systemPrompt = "Anda adalah asisten AI dari restoran kami yang ramah dan informatif.
+        $adminContext = '';
+        if ($user && $user->is_admin) {
+            $totalProducts = Menu::count();
+            $totalCategories = Menu::distinct('kategori')->count('kategori');
+            $todayOrders = Order::whereDate('created_at', Carbon::today())->count();
+            $todayRevenue = Order::whereDate('created_at', Carbon::today())->where('status', 'completed')->sum('total_amount');
+            $totalRevenue = Order::where('status', 'completed')->sum('total_amount');
+
+            // Produk dengan stok menipis (<= 3)
+            $lowStockProducts = Menu::where('stock', '<=', 3)->select('name', 'stock')->get();
+            $lowStockDetails = 'Semua stok produk aman (di atas 3).';
+            if ($lowStockProducts->count() > 0) {
+                $lowItems = [];
+                foreach ($lowStockProducts as $item) {
+                    $lowItems[] = "{$item->name} (sisa {$item->stock})";
+                }
+                $lowStockDetails = implode(', ', $lowItems);
+            }
+
+            $adminContext = "\n\nINFORMASI BISNIS (KHUSUS ADMIN):\n";
+            $adminContext .= "- Total Produk: {$totalProducts}\n";
+            $adminContext .= "- Total Kategori: {$totalCategories}\n";
+            $adminContext .= "- Transaksi Hari Ini: {$todayOrders}\n";
+            $adminContext .= '- Pendapatan Hari Ini (Selesai): Rp '.number_format($todayRevenue, 0, ',', '.')."\n";
+            $adminContext .= '- Total Pendapatan Keseluruhan (Selesai): Rp '.number_format($totalRevenue, 0, ',', '.')."\n";
+            $adminContext .= "- Peringatan Stok Menipis: {$lowStockDetails}\n";
+            $adminContext .= "\nTUGAS KHUSUS ADMIN:\n";
+            $adminContext .= "Sebagai AI Asisten Admin, tugas Anda adalah membantu admin {$user->name} membuat keputusan bisnis yang lebih cerdas dan meningkatkan efisiensi operasional wiliamCafe. Analisis data penjualan, produk, dan pendapatan yang diberikan, lalu berikan rekomendasi, ringkasan, atau wawasan secara profesional namun tetap ramah.";
+        }
+
+        $systemPrompt = "Anda adalah asisten AI dari restoran kami (wiliamCafe) yang ramah dan informatif.
 Data yang harus Anda ketahui saat ini:
-- Nama Pelanggan: {$user?->name}
+- Nama Pengguna: {$user?->name}
 - Informasi Keranjang Pelanggan saat ini: {$cartDetails}
 - Informasi Menu Terlaris (Favorit): {$favoriteMenu}
+{$adminContext}
 
 Daftar Seluruh Menu Restoran:
 {$menusContext}
@@ -121,6 +154,6 @@ Penting: Jawab sesuai dengan instruksi di atas dan jangan pernah berbohong menge
 
         $errorDetail = $response->json('error.message') ?? 'Unknown error from Gemini API';
 
-        return response()->json(['error' => 'Gemini API Error: '.$errorDetail], 500);
+        return response()->json(['error' => 'Layanan AI sedang mengalami gangguan. Silakan coba beberapa saat lagi.'], 500);
     }
 }
