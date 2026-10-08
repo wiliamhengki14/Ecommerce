@@ -56,7 +56,7 @@ const Content = ({
     contentClasses = 'py-1 bg-white',
     children,
 }: PropsWithChildren<{
-    align?: 'left' | 'right';
+    align?: 'left' | 'right' | 'top' | 'top-left';
     width?: '48';
     contentClasses?: string;
 }>) => {
@@ -65,9 +65,13 @@ const Content = ({
     let alignmentClasses = 'origin-top';
 
     if (align === 'left') {
-        alignmentClasses = 'ltr:origin-top-left rtl:origin-top-right start-0';
+        alignmentClasses = 'ltr:origin-top-left rtl:origin-top-right start-0 mt-2';
     } else if (align === 'right') {
-        alignmentClasses = 'ltr:origin-top-right rtl:origin-top-left end-0';
+        alignmentClasses = 'ltr:origin-top-right rtl:origin-top-left end-0 mt-2';
+    } else if (align === 'top') {
+        alignmentClasses = 'origin-bottom-right end-0 bottom-full mb-2';
+    } else if (align === 'top-left') {
+        alignmentClasses = 'origin-bottom-left start-0 bottom-full mb-2';
     }
 
     let widthClasses = '';
@@ -88,7 +92,7 @@ const Content = ({
                 leaveTo="opacity-0 scale-95"
             >
                 <div
-                    className={`absolute z-50 mt-2 rounded-md shadow-lg ${alignmentClasses} ${widthClasses}`}
+                    className={`absolute z-50 rounded-md shadow-lg ${alignmentClasses} ${widthClasses}`}
                     onClick={() => setOpen(false)}
                 >
                     <div

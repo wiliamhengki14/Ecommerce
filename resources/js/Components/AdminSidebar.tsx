@@ -16,6 +16,7 @@ import Dropdown from "./Dropdown"
 
 export function AdminSidebar() {
     const { url, props } = usePage<any>()
+    const { order_count_admin } = usePage().props as any;
     const user = props.auth?.user
 
     return (
@@ -42,14 +43,26 @@ export function AdminSidebar() {
                     <SidebarGroupContent>
                         <SidebarMenu>
                             <SidebarMenuItem>
+                                <SidebarMenuButton render={<Link href={route('admin.dashboard')} />} isActive={url === '/admin/dashboard'} tooltip="Dashboard">
+                                    <LayoutDashboard className="w-4 h-4" />
+                                    <span>Dashboard</span>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
                                 <SidebarMenuButton render={<Link href={route('admin.menus.index')} />} isActive={url.startsWith('/admin/menus')} tooltip="Products">
                                     <Package className="w-4 h-4" />
+                                    
                                     <span>Products</span>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
                                 <SidebarMenuButton render={<Link href={route('admin.orders.index')} />} isActive={url.startsWith('/admin/orders')} tooltip="Orders">
                                     <ShoppingCart className="w-4 h-4" />
+                                    {order_count_admin > 0 && (
+                                        <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-[10px] font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-rose-500 rounded-full shadow-sm">
+                                            {order_count_admin}
+                                        </span>
+                                    )}
                                     <span>Orders</span>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
@@ -77,7 +90,7 @@ export function AdminSidebar() {
                                         <ChevronsUpDown className="ml-auto size-4" />
                                     </SidebarMenuButton>
                                 </Dropdown.Trigger>
-                                <Dropdown.Content align="left">
+                                <Dropdown.Content align="top-left">
                                     <Dropdown.Link href={route('logout')} method="post" as="button" className="flex items-center gap-2">
                                         <LogOut className="w-4 h-4" /> Log Out
                                     </Dropdown.Link>

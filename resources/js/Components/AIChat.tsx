@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { RefreshCw, Plus, ArrowUp, Bot, User } from 'lucide-react';
 import { usePage } from '@inertiajs/react';
 
+import ReactMarkdown from 'react-markdown';
+
 type Message = {
   id: number;
   text: string;
@@ -18,8 +20,7 @@ export default function AIChat({ onDragStart, isDragging = false }: AIChatProps)
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const {auth} = usePage<any>().props;
-
+  const { auth } = usePage<any>().props;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -87,12 +88,12 @@ export default function AIChat({ onDragStart, isDragging = false }: AIChatProps)
   };
 
   return (
-    <div 
-      className="min-w-[320px] w-[400px] max-w-[90vw] min-h-[400px] h-[550px] max-h-[80vh] flex flex-col bg-[#09090b] text-zinc-50 rounded-[2rem] border border-zinc-800 shadow-xl overflow-hidden font-sans resize"
+    <div
+      className="min-w-[320px] w-[400px] max-w-[90vw] min-h-[400px] h-[600px] max-h-[80vh] flex flex-col bg-[#09090b] text-zinc-50 rounded-[2rem] border border-zinc-800 shadow-xl overflow-hidden font-sans resize"
     >
 
       {/* Header */}
-      <div 
+      <div
         className={`flex items-start justify-between p-6 border-b border-zinc-800/60 shrink-0 select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
         onMouseDown={onDragStart}
       >
@@ -138,10 +139,16 @@ export default function AIChat({ onDragStart, isDragging = false }: AIChatProps)
                 <div
                   className={`p-3 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
                     ? 'bg-white text-zinc-950 rounded-tr-sm shadow-2xl border border-zinc-800/60'
-                    : 'bg-white text-zinc-950 border border-zinc-800/60 rounded-tl-sm shadow-2xl'
+                    : 'bg-white text-zinc-950 border border-zinc-800/60 rounded-tl-sm shadow-2xl overflow-hidden'
                     }`}
                 >
-                  {msg.text}
+                  {msg.role === 'model' ? (
+                    <div className="prose prose-sm prose-zinc max-w-none prose-p:my-1 prose-ul:my-1 prose-headings:my-2">
+                      <ReactMarkdown>{msg.text}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    msg.text
+                  )}
                 </div>
               </div>
             ))}
@@ -170,7 +177,7 @@ export default function AIChat({ onDragStart, isDragging = false }: AIChatProps)
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="w-full bg-transparent text-sm resize-none outline-none placeholder:text-[#1c1c1c] text-[#1c1c1c] min-h-[50px] max-h-[150px] p-2 leading-relaxed focus:ring-0 border-0"
+            className="w-full bg-transparent text-sm resize-none outline-none placeholder:text-[#1c1c1c] text-[#1c1c1c] min-h-[50px] max-h-[50px] p-2 leading-relaxed focus:ring-0 border-0"
             placeholder="Type your message here..."
             disabled={isLoading}
           />
