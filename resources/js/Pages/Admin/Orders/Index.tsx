@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Button from '@/Components/ui/Button/Button';
 import { Eye, Search, FileText } from 'lucide-react';
 import Input from '@/Components/ui/Input';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/Components/ui/pagination"
 
 interface User {
     id: number;
@@ -21,14 +30,44 @@ interface Order {
     user: User;
 }
 
-export default function AdminOrderIndex({ orders }: { orders: Order[] }) {
-    const [searchTerm, setSearchTerm] = useState('');
+interface PaginationLinkType {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
 
-    const filteredOrders = orders.filter(order => 
-        order.order_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.user?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.status.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+interface PaginatedOrders {
+    data: Order[];
+    links: PaginationLinkType[];
+    current_page: number;
+    last_page: number;
+    total: number;
+    from: number;
+    to: number;
+}
+
+export default function AdminOrderIndex({ orders, filters }: { orders: PaginatedOrders, filters: { search?: string } }) {
+    const [searchTerm, setSearchTerm] = useState(filters?.search || '');
+    const isFirstRender = React.useRef(true);
+
+    React.useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+
+        const timeout = setTimeout(() => {
+            router.get(
+                route('admin.orders.index'),
+                { search: searchTerm },
+                { preserveState: true, preserveScroll: true, replace: true }
+            );
+        }, 300);
+
+        return () => clearTimeout(timeout);
+    }, [searchTerm]);
+
+    // Removed client-side filtering
 
     const getStatusBadge = (status: string) => {
         switch (status.toLowerCase()) {
@@ -54,6 +93,8 @@ export default function AdminOrderIndex({ orders }: { orders: Order[] }) {
                         <div className="relative w-full sm:w-64">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                             <Input 
+                                id="search"
+                                name="search"
                                 type="text" 
                                 placeholder="Cari ID / Nama / Status..." 
                                 className="pl-9 bg-gray-50 border-transparent focus:bg-white focus:border-primary"
@@ -63,6 +104,52 @@ export default function AdminOrderIndex({ orders }: { orders: Order[] }) {
                         </div>
                     </div>
                 </div>
+                {orders.total > 0 && (
+                    <div className="flex justify-end items-center">
+                        <Pagination>
+                            <PaginationContent>
+                                {orders.links.map((link, index) => {
+                                    if (link.label.includes('Previous')) {
+                                        return (
+                                            <PaginationItem key={index}>
+                                                <PaginationPrevious 
+                                                    href={link.url || '#'} 
+                                                    className={!link.url ? 'pointer-events-none opacity-50' : ''} 
+                                                />
+                                            </PaginationItem>
+                                        );
+                                    }
+                                    if (link.label.includes('Next')) {
+                                        return (
+                                            <PaginationItem key={index}>
+                                                <PaginationNext 
+                                                    href={link.url || '#'} 
+                                                    className={!link.url ? 'pointer-events-none opacity-50' : ''} 
+                                                />
+                                            </PaginationItem>
+                                        );
+                                    }
+                                    if (link.label === '...') {
+                                        return (
+                                            <PaginationItem key={index}>
+                                                <PaginationEllipsis />
+                                            </PaginationItem>
+                                        );
+                                    }
+                                    return (
+                                        <PaginationItem key={index}>
+                                            <PaginationLink 
+                                                href={link.url || '#'} 
+                                                isActive={link.active}
+                                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                            />
+                                        </PaginationItem>
+                                    );
+                                })}
+                            </PaginationContent>
+                        </Pagination>
+                    </div>
+                )}
 
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div className="overflow-x-auto">
@@ -78,8 +165,8 @@ export default function AdminOrderIndex({ orders }: { orders: Order[] }) {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
-                                {filteredOrders.length > 0 ? (
-                                    filteredOrders.map((order) => (
+                                {orders.data.length > 0 ? (
+                                    orders.data.map((order) => (
                                         <tr key={order.id} className="hover:bg-gray-50/50 transition-colors">
                                             <td className="px-6 py-4 font-medium text-gray-900">
                                                 {order.order_number}

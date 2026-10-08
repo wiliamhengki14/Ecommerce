@@ -1,11 +1,14 @@
 import { Link, usePage, router } from '@inertiajs/react';
 import { ShoppingCart, Search, Menu, User, ClipboardList, LogOut, Store, X } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
-import ApplicationLogo from './ApplicationLogo';
 import Modal from './Modal';
 import Button from './ui/Button/Button';
 
-export default function CustomerNavbar() {
+interface CustomerNavbarProps {
+    showSearch?: boolean;
+}
+
+export default function CustomerNavbar({ showSearch = true }: CustomerNavbarProps) {
     const { auth, cart_count, order_count, order_count_admin } = usePage().props as any;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const initialSearch = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('search') || '' : '';
@@ -58,23 +61,25 @@ export default function CustomerNavbar() {
                     </div>
 
                     {/* Search Bar (Desktop) */}
-                    <div className="hidden md:flex flex-1 max-w-2xl mx-8">
-                        <form onSubmit={handleSearch} className="relative w-full group">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <Search className="h-5 w-5 text-gray-400 group-focus-within:text-[#1c1c1c] transition-colors" />
-                            </div>
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="block w-full pl-12 pr-4 py-3 border-gray-200 rounded-full leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all duration-300 shadow-inner"
-                                placeholder="Cari produk, kategori, atau merek..."
-                            />
-                            <button type="submit" className="absolute inset-y-1.5 right-1.5 px-4 bg-[#1c1c1c] hover:bg-indigo-700 text-white text-sm font-medium rounded-full transition-colors">
-                                Cari
-                            </button>   
-                        </form>
-                    </div>
+                    {showSearch && (
+                        <div className="hidden md:flex flex-1 max-w-2xl mx-8">
+                            <form onSubmit={handleSearch} className="relative w-full group">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <Search className="h-5 w-5 text-gray-400 group-focus-within:text-[#1c1c1c] transition-colors" />
+                                </div>
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="block w-full pl-12 pr-4 py-3 border-gray-200 rounded-full leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-all duration-300 shadow-inner"
+                                    placeholder="Cari produk, kategori, atau merek..."
+                                />
+                                <button type="submit" className="absolute inset-y-1.5 right-1.5 px-4 bg-[#1c1c1c] hover:bg-indigo-700 text-white text-sm font-medium rounded-full transition-colors">
+                                    Cari
+                                </button>   
+                            </form>
+                        </div>
+                    )}
 
                     {/* Right Navigation */}
                     <div className="flex items-center space-x-4 sm:space-x-6">
@@ -158,18 +163,20 @@ export default function CustomerNavbar() {
             {/* Mobile Menu Dropdown */}
             <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-96 border-t border-gray-100' : 'max-h-0'}`}>
                 <div className="bg-white px-4 pt-4 pb-6 space-y-4 shadow-inner">
-                    <form onSubmit={handleSearch} className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Search className="h-5 w-5 text-gray-400" />
-                        </div>
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white"
-                            placeholder="Cari produk..."
-                        />
-                    </form>
+                    {showSearch && (
+                        <form onSubmit={handleSearch} className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <Search className="h-5 w-5 text-gray-400" />
+                            </div>
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white"
+                                placeholder="Cari produk..."
+                            />
+                        </form>
+                    )}
                     
                     {!auth?.user ? (
                         <div className="flex flex-col gap-3 pt-2">

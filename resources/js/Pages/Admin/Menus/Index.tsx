@@ -76,6 +76,8 @@ export default function AdminMenuIndex({ menus }: { menus: Menu[] }) {
                         <div className="relative w-full sm:w-64">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                             <Input
+                                id="search"
+                                name="search"
                                 type="text"
                                 placeholder="Cari produk..."
                                 className="pl-9 bg-gray-50 border-transparent focus:bg-white focus:border-primary"
@@ -140,7 +142,7 @@ export default function AdminMenuIndex({ menus }: { menus: Menu[] }) {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center justify-end gap-2">
-                                                    <Link href={route('menus.detail', menu.id)}>
+                                                    <Link href={route('admin.menus.detail', menu.id)}>
                                                         <Button color="sekunder" className="!p-2 h-10 w-10 !rounded-lg" title="Detail">
                                                             <Eye className="h-4 w-4" />
                                                         </Button>

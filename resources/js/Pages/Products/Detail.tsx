@@ -95,37 +95,6 @@ const Detail = (props: IndexTypes) => {
                                 <Button onClick={() => handleCart(menu.id)} color="primer" className="w-full py-3 text-lg font-bold shadow-md hover:shadow-lg transition">
                                     Add To Cart
                                 </Button>
-                                {user.is_admin ? (
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <Link href={route('menus.edit', menu.id)}>
-                                            <Button color="sekunder" className="w-full py-3 hover:bg-gray-200 transition">Edit</Button>
-                                        </Link>
-                                        
-                                        <AlertDialog>
-                                            <AlertDialogTrigger
-                                                render={<Button className="w-full py-3 !bg-red-500 hover:!bg-red-600 !text-white transition shadow-sm border-none">
-                                                    Hapus
-                                                </Button>}
-                                            />
-                                            <AlertDialogContent size="sm">
-                                                <AlertDialogHeader>
-                                                <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
-                                                    <Trash2Icon />
-                                                </AlertDialogMedia>
-                                                <AlertDialogTitle>Delete chat?</AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                    This will permanently delete this chat conversation. View{" "}
-                                                    <a href="#">Settings</a> delete any memories saved during this chat.
-                                                </AlertDialogDescription>
-                                                </AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                <AlertDialogAction onClick={() => handleDelete(menu.id, menu.name)} className="bg-red-500 hover:bg-red-400">Delete</AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                            </AlertDialog>
-                                    </div>
-                                ) : null}
                             </div>
                         </div>
                     </div>

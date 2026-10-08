@@ -35,36 +35,23 @@ class MenuController extends Controller
             });
         }
 
-        $menus = $query->get()->map(function ($menu) {
-            return [
-                'id' => $menu->id,
-                'name' => $menu->name,
-                'description' => $menu->description,
-                'price' => $menu->price,
-                'stock' => $menu->stock,
-                'kategori' => $menu->kategori,
-                'image_url' => $menu->image ? asset('storage/'.$menu->image) : null,
-            ];
-        });
+        $menus = $query->get()->map(fn ($menu) => $this->formatMenu($menu));
 
         return Inertia::render('Products/Index', ['menus' => $menus, 'kategori_aktif' => $kategori, 'user' => $user, 'carts' => $carts]);
     }
 
     public function adminIndex(): Response
     {
-        $menus = Menu::latest()->get()->map(function ($menu) {
-            return [
-                'id' => $menu->id,
-                'name' => $menu->name,
-                'description' => $menu->description,
-                'price' => $menu->price,
-                'stock' => $menu->stock,
-                'kategori' => $menu->kategori,
-                'image_url' => $menu->image ? asset('storage/'.$menu->image) : null,
-            ];
-        });
+        $menus = Menu::latest()->get()->map(fn ($menu) => $this->formatMenu($menu));
 
         return Inertia::render('Admin/Menus/Index', ['menus' => $menus]);
+    }
+
+    public function adminDetail(Menu $menu): Response
+    {
+        return Inertia::render('Admin/Menus/Detail', [
+            'menu' => $this->formatMenu($menu),
+        ]);
     }
 
     public function create(): Response
@@ -101,30 +88,14 @@ class MenuController extends Controller
     public function detail(Menu $menu): Response
     {
         return Inertia::render('Products/Detail', [
-            'menu' => [
-                'id' => $menu->id,
-                'name' => $menu->name,
-                'description' => $menu->description,
-                'price' => $menu->price,
-                'stock' => $menu->stock,
-                'kategori' => $menu->kategori,
-                'image_url' => $menu->image ? asset('storage/'.$menu->image) : null,
-            ],
+            'menu' => $this->formatMenu($menu),
         ]);
     }
 
     public function edit(Menu $menu): Response
     {
         return Inertia::render('Products/Edit', [
-            'menu' => [
-                'id' => $menu->id,
-                'price' => $menu->price,
-                'name' => $menu->name,
-                'description' => $menu->description,
-                'stock' => $menu->stock,
-                'kategori' => $menu->kategori,
-                'image_url' => $menu->image ? asset('storage/'.$menu->image) : null,
-            ],
+            'menu' => $this->formatMenu($menu),
         ]);
     }
 
@@ -155,7 +126,7 @@ class MenuController extends Controller
             'image' => $imagePath,
         ]);
 
-        return Redirect::route('menus.detail', $menu)->with('message', 'Data Berhasil di update');
+        return Redirect::route('admin.menus.detail', $menu)->with('message', 'Data Berhasil di update');
     }
 
     public function delete(Menu $menu)
@@ -166,5 +137,18 @@ class MenuController extends Controller
         $menu->delete();
 
         return Redirect::route('menus.index')->with('message', 'Data Berhasil di hapus');
+    }
+
+    private function formatMenu(Menu $menu): array
+    {
+        return [
+            'id' => $menu->id,
+            'name' => $menu->name,
+            'description' => $menu->description,
+            'price' => $menu->price,
+            'stock' => $menu->stock,
+            'kategori' => $menu->kategori,
+            'image_url' => $menu->image ? asset('storage/'.$menu->image) : null,
+        ];
     }
 }
