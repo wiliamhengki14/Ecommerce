@@ -1,14 +1,9 @@
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/Components/ui/sidebar"
 import { AdminSidebar } from "@/Components/AdminSidebar"
 import { PropsWithChildren } from "react"
-import { Head, usePage } from "@inertiajs/react"
-import { Alert, AlertTitle, AlertDescription } from "@/Components/ui/Alert";
-import { CheckCircle2, AlertCircle } from "lucide-react";
+import { Head } from "@inertiajs/react"
 
 export default function AdminLayout({ children, title }: PropsWithChildren<{ title?: string }>) {
-    const { props } = usePage<any>()
-    const flash = props.flash
-
     return (
         <SidebarProvider>
             {title && <Head title={title} />}
@@ -21,29 +16,6 @@ export default function AdminLayout({ children, title }: PropsWithChildren<{ tit
                     </div>
                 </header>
                 <main className="p-4 md:p-6 flex-1 overflow-auto bg-gray-50 min-h-screen">
-                    {/* <div className="mb-6 flex flex-col gap-2 max-w-md">
-                        {flash?.message && (
-                            <Alert variant="success" className="shadow-sm">
-                                <CheckCircle2 className="h-4 w-4" />
-                                <AlertTitle>Berhasil!</AlertTitle>
-                                <AlertDescription>{flash.message}</AlertDescription>
-                            </Alert>
-                        )}
-                        {flash?.success && (
-                            <Alert variant="success" className="shadow-sm">
-                                <CheckCircle2 className="h-4 w-4" />
-                                <AlertTitle>Berhasil!</AlertTitle>
-                                <AlertDescription>{flash.success}</AlertDescription>
-                            </Alert>
-                        )}
-                        {flash?.error && (
-                            <Alert variant="destructive" className="shadow-sm">
-                                <AlertCircle className="h-4 w-4" />
-                                <AlertTitle>Gagal!</AlertTitle>
-                                <AlertDescription>{flash.error}</AlertDescription>
-                            </Alert>
-                        )}
-                    </div> */}
                     {children}
                 </main>
             </SidebarInset>

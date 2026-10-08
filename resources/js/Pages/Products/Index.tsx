@@ -1,16 +1,13 @@
-import { Head, router, useForm, usePage } from "@inertiajs/react"
-import Button from "@/Components/ui/Button/Button"
-import { Link } from "@inertiajs/react"
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head, router, usePage, Link } from "@inertiajs/react";
+import Button from "@/Components/ui/Button/Button";
 import { filterIndex } from "./Create.constant";
-import Input from "@/Components/ui/Input";
-import Modal from "@/Components/Modal";
-import { Alert, AlertTitle, AlertDescription } from "@/Components/ui/Alert";
-import { CheckCircle2, AlertCircle, Timer } from "lucide-react";
 import { useState, useEffect } from 'react';
 import CustomerNavbar from "@/Components/CustomerNavbar";
 import FloatingChatWidget from "@/Components/FloatingChatWidget";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs"
+import OrderPaymentModal from "./Partials/OrderPaymentModal";
+import ClearCartModal from "./Partials/ClearCartModal";
+import { Alert, AlertTitle, AlertDescription } from "@/Components/ui/Alert";
+import { CheckCircle2, AlertCircle } from "lucide-react";
 
 interface Menutype {
     id: number,
@@ -235,96 +232,19 @@ const Index = (props: IndexMenu) => {
                 </div>
 
                 {/* Modal Konfirmasi Order */}
-                <Modal show={showOrderModal} onClose={() => setShowOrderModal(false)} maxWidth="sm">
-                    <div className="p-6 flex flex-col">
-                        <h2 className="text-lg font-extrabold text-gray-900 mb-4">
-                            Konfirmasi Order
-                        </h2>
-                        <Tabs defaultValue="cash" className="w-full flex flex-col">
-                            <TabsList className="grid w-full grid-cols-2 mb-4 p-1 bg-gray-100 rounded-lg">
-                                <TabsTrigger 
-                                    value="cash" 
-                                    className="border-2 border-transparent data-active:border-[#1c1c1c] data-active:shadow-sm"
-                                >
-                                    Cash
-                                </TabsTrigger>
-                                <TabsTrigger 
-                                    value="qris" 
-                                    className="border-2 border-transparent data-active:border-[#1c1c1c] data-active:shadow-sm"
-                                >
-                                    QRIS
-                                </TabsTrigger>
-                            </TabsList>
-                            <TabsContent value="cash">
-                                <p className="text-sm text-gray-600 text-center">
-                                    Apakah Anda yakin ingin menyelesaikan order ini secara tunai (cash)?<br/>
-                                    Total pembayaran: <span className="font-bold text-gray-900">Rp {Number(totalAmount).toLocaleString('id-ID')}</span>
-                                </p>
-                                <div className="mt-6 flex justify-end gap-3">
-                                    <Button color="sekunder" onClick={() => setShowOrderModal(false)}>
-                                        Batal
-                                    </Button>
-                                    <Button color="primer" onClick={handleOrder}>
-                                        Ya, Order
-                                    </Button>
-                                </div>
-                            </TabsContent>
-                            <TabsContent value="qris">
-                                <div className="flex flex-col items-center justify-center space-y-3">
-                                    <p className="text-sm text-gray-600 text-center">
-                                        Scan QR Code berikut untuk membayar senilai:<br/>
-                                        <span className="text-xl font-bold text-gray-900">Rp {Number(totalAmount).toLocaleString('id-ID')}</span>
-                                    </p>
-                                    <div className="bg-white p-3 rounded-xl border-2 border-gray-200 shadow-sm inline-block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-800">
-                                            <rect width="5" height="5" x="3" y="3" rx="1"/>
-                                            <rect width="5" height="5" x="16" y="3" rx="1"/>
-                                            <rect width="5" height="5" x="3" y="16" rx="1"/>
-                                            <path d="M21 16h-3a2 2 0 0 0-2 2v3"/>
-                                            <path d="M21 21v.01"/>
-                                            <path d="M12 7v3a2 2 0 0 1-2 2H7"/>
-                                            <path d="M3 12h.01"/>
-                                            <path d="M12 3h.01"/>
-                                            <path d="M12 16v.01"/>
-                                            <path d="M16 12h1"/>
-                                            <path d="M21 12v.01"/>
-                                            <path d="M12 21v-1"/>
-                                        </svg>
-                                    </div>
-                                    <p className="text-xs text-gray-500 text-center">Buka aplikasi e-Wallet atau M-Banking Anda untuk melakukan pembayaran.</p>
-                                </div>
-                                <div className="mt-6 flex justify-end gap-3">
-                                    <Button color="sekunder" onClick={() => setShowOrderModal(false)}>
-                                        Batal
-                                    </Button>
-                                    <Button color="primer" onClick={handleOrder}>
-                                        Sudah Bayar & Order
-                                    </Button>
-                                </div>
-                            </TabsContent>
-                        </Tabs>
-                    </div>
-                </Modal>
+                <OrderPaymentModal
+                    show={showOrderModal}
+                    onClose={() => setShowOrderModal(false)}
+                    totalAmount={totalAmount}
+                    onConfirm={handleOrder}
+                />
 
                 {/* Modal Konfirmasi Cancel */}
-                <Modal show={showCancelModal} onClose={() => setShowCancelModal(false)} maxWidth="sm">
-                    <div className="p-6">
-                        <h2 className="text-lg font-extrabold text-red-600">
-                            Batalkan Keranjang
-                        </h2>
-                        <p className="mt-2 text-sm text-gray-600">
-                            Apakah Anda yakin ingin mengosongkan semua isi keranjang? Tindakan ini tidak dapat dibatalkan.
-                        </p>
-                        <div className="mt-6 flex justify-end gap-3">
-                            <Button color="sekunder" onClick={() => setShowCancelModal(false)}>
-                                Kembali
-                            </Button>
-                            <Button className="bg-red-600 text-white hover:bg-red-700" onClick={handleDelete}>
-                                Ya, Kosongkan
-                            </Button>
-                        </div>
-                    </div>
-                </Modal>
+                <ClearCartModal
+                    show={showCancelModal}
+                    onClose={() => setShowCancelModal(false)}
+                    onConfirm={handleDelete}
+                />
 
                 {/* Floating AI Chat Widget */}
                 <FloatingChatWidget />
