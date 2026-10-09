@@ -82,7 +82,7 @@ class MenuController extends Controller
             'image' => $imagePath,
         ]);
 
-        return Redirect::back();
+        return Redirect::back()->with('message', 'Data Berhasil di tambahkan!');
     }
 
     public function detail(Menu $menu): Response
@@ -131,12 +131,14 @@ class MenuController extends Controller
 
     public function delete(Menu $menu)
     {
-        if ($menu->image && Storage::disk('public')->exists($menu->image)) {
-            Storage::disk('public')->delete($menu->image);
-        }
-        $menu->delete();
+        if (Auth::user()->is_admin) {
+            if ($menu->image && Storage::disk('public')->exists($menu->image)) {
+                Storage::disk('public')->delete($menu->image);
+            }
+            $menu->delete();
 
-        return Redirect::route('menus.index')->with('message', 'Data Berhasil di hapus');
+            return Redirect::route('admin.menus.index')->with('message', 'Data Berhasil di hapus');
+        }
     }
 
     private function formatMenu(Menu $menu): array

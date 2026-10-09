@@ -34,7 +34,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         if (Auth::user()->is_admin) {
-            return redirect(route('admin.menus.index', absolute: false))->with('message', 'Login berhasil! Selamat datang kembali, Admin.');
+            return redirect(route('admin.dashboard', absolute: false))->with('message', 'Login berhasil! Selamat datang kembali, Admin.');
         }
 
         return redirect()->intended(route('menus.index', absolute: false))->with('message', 'Login berhasil! Selamat datang kembali.');

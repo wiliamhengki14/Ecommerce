@@ -131,7 +131,7 @@ class OrderController extends Controller
                 ]);
             }
 
-            return Redirect::back();
+            return Redirect::back()->with('message', 'Order Berhasil!');
         } else {
             abort(403, 'Unauthorized action.');
         }
