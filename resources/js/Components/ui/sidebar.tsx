@@ -269,7 +269,7 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <PanelLeftIcon className="cn-rtl-flip" />
+      <PanelLeftIcon className="cn-rtl-flip size-4 bg-none" />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )

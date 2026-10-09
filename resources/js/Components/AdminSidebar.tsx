@@ -32,7 +32,7 @@ export function AdminSidebar() {
                                 <span className="font-semibold">wiliamCafe</span>
                                 <span className="">Enterprise</span>
                             </div>
-                            <ChevronsUpDown className="ml-auto size-4" />
+                            <ChevronsUpDown className="ml-auto" />
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>

@@ -3,6 +3,7 @@ import { ShoppingCart, Search, Menu, User, ClipboardList, LogOut, Store, X } fro
 import { useState, useEffect, useRef } from 'react';
 import Modal from './Modal';
 import Button from './ui/Button/Button';
+import LogoutModal from './LogoutModal';
 
 interface CustomerNavbarProps {
     showSearch?: boolean;
@@ -134,18 +135,11 @@ export default function CustomerNavbar({ showSearch = true }: CustomerNavbarProp
                                 </>
                             )}
                         </div>
-                        <Modal show={showLogout} onClose={() => setShowLogout(false)} maxWidth='sm'>
-                            <div className='p-6'>
-                                <div className='flex items-center justify-between'>
-                                    <h2 className='font-extrabold text-red-800 text-2xl mb-2'>Konfirmasi Logout</h2>
-                                </div>
-                                <p className='text-[#1c1c1c]'>Apakah anda ingin logout?</p>
-                                <div className='flex justify-end gap-2 mt-4'>
-                                    <Button color='sekunder' onClick={() => setShowLogout(false)}>Batal</Button>
-                                    <Button className='bg-red-500 text-white' onClick={handleLogout}>Ya, Logout</Button>
-                                </div>
-                            </div>
-                        </Modal>
+                        <LogoutModal 
+                            show={showLogout}
+                            onClose={() => setShowLogout(false)}
+                            onConfirm={handleLogout}
+                        />
 
                         {/* Mobile menu button */}
                         <div className="flex items-center md:hidden">
@@ -189,15 +183,19 @@ export default function CustomerNavbar({ showSearch = true }: CustomerNavbarProp
                         </div>
                     ) : (
                         <div className="pt-2">
-                             <Link href={route('menus.index')} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50">
-                                <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold">
-                                    {auth.user.name.charAt(0).toUpperCase()}
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="font-medium text-gray-900">{auth.user.name}</span>
-                                    <span className="text-xs text-gray-500">Lihat Dashboard</span>
-                                </div>
-                            </Link>
+                             <div className='flex items-center justify-between'>
+                                <Link href={route('menus.index')} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50">
+                                    <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold">
+                                        {auth.user.name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="font-medium text-gray-900">{auth.user.name}</span>
+                                        <span className="text-xs text-gray-500">Lihat Dashboard</span>
+                                    </div>
+                                </Link>
+                                <LogOut onClick={() => setShowLogout(true)} className='text-red-600 mr-3'/>
+                             </div>
+                             
                         </div>
                     )}
                 </div>
