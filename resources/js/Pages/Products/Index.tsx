@@ -40,7 +40,7 @@ interface IndexMenu {
 
 const Index = (props: IndexMenu) => {
     const { flash } = usePage<any>().props;
-    
+
     // const {errors } = useForm<any>();
     const { menus, kategori_aktif, user, carts = [] } = props;
     const handleFilter = (label: string) => {
@@ -104,7 +104,7 @@ const Index = (props: IndexMenu) => {
     const totalAmount = carts.reduce((total, item) => {
         return total + (item.menu ? item.quantity * item.menu.price : 0);
     }, 0)
-    
+
     return (
         <div className="min-h-screen bg-gray-50">
             <CustomerNavbar />
@@ -112,7 +112,7 @@ const Index = (props: IndexMenu) => {
 
                 <Head title="Index" />
                 {/* Floating Alerts */}
-                <div className="fixed top-15 right-[40%] z-[100] flex flex-col gap-2 min-w-[300px] max-w-md transition-all duration-300">
+                <div className="fixed top-15 md:right-[40%] right-10 z-[100] flex flex-col gap-2 min-w-[300px] max-w-md transition-all duration-300">
                     {isVisible && flash?.message && (
                         <Alert variant="success" className="shadow-lg animate-in fade-in slide-in-from-top-5">
                             <CheckCircle2 className="h-4 w-4" />

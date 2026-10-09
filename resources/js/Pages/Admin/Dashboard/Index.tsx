@@ -1,8 +1,11 @@
 import React from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PackageSearch, Tags, ShoppingCart, DollarSign, TrendingUp, Bot } from 'lucide-react';
 import FloatingChatWidget from "@/Components/FloatingChatWidget";
+import { Alert, AlertTitle, AlertDescription } from "@/Components/ui/Alert";
+import { useState,useEffect } from 'react';
+import { CheckCircle2, AlertCircle } from "lucide-react";
 import {
     BarChart,
     Bar,
@@ -40,11 +43,27 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ stats, bestSellingProducts, chartData, categorySales }: DashboardProps) {
-
+    const {flash} = usePage<any>().props;
+    const [isVisible, setIsVisible] = useState(false);
+    useEffect(() => {
+            if (flash?.message || flash?.success || flash?.error) {
+                setIsVisible(true);
+                const timer = setTimeout(() => setIsVisible(false), 3000);
+                return () => clearTimeout(timer);
+            }
+        }, [flash]);
     return (
         <AdminLayout title="Dashboard">
             <div className="flex flex-col gap-6">
-                
+                <div className="fixed top-15 right-15 md:right-[30%] z-[100] flex flex-col gap-2 min-w-[300px] max-w-md transition-all duration-300 justify-center items-center">
+                    {isVisible && flash?.message && (
+                        <Alert variant="success" className="shadow-lg animate-in fade-in slide-in-from-top-5 items-center">
+                            <CheckCircle2 className="h-4 w-4" />
+                            <AlertTitle>Berhasil!</AlertTitle>
+                            <AlertDescription>{flash.message}</AlertDescription>
+                        </Alert>
+                    )}
+                </div>
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                     <div>

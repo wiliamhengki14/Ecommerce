@@ -6,6 +6,10 @@ import {Link} from "@inertiajs/react";
 import AdminLayout from '@/Layouts/AdminLayout';
 import Select from "@/Components/ui/Select";
 import { filter } from "./Create.constant";
+import { Alert, AlertTitle, AlertDescription } from "@/Components/ui/Alert";
+import { useState,useEffect } from 'react';
+import {usePage} from "@inertiajs/react";
+import { CheckCircle2, AlertCircle } from "lucide-react";
 
 interface MenuProp {
     name: string,
@@ -34,9 +38,27 @@ const Create = () => {
             }
         });
     }
+    const {flash} = usePage<any>().props;
+            const [isVisible, setIsVisible] = useState(false);
+            useEffect(() => {
+                    if (flash?.message || flash?.success || flash?.error) {
+                        setIsVisible(true);
+                        const timer = setTimeout(() => setIsVisible(false), 3000);
+                        return () => clearTimeout(timer);
+                    }
+                }, [flash]);
 
     return (
         <AdminLayout title="Tambah Produk">
+            <div className="fixed top-15 right-15 md:right-[30%] z-[100] flex flex-col gap-2 min-w-[300px] max-w-md transition-all duration-300 justify-center items-center">
+                    {isVisible && flash?.message && (
+                        <Alert variant="success" className="shadow-lg animate-in fade-in slide-in-from-top-5 items-center">
+                            <CheckCircle2 className="h-4 w-4" />
+                            <AlertTitle>Berhasil!</AlertTitle>
+                            <AlertDescription>{flash.message}</AlertDescription>
+                        </Alert>
+                    )}
+                </div>
             <div className="flex flex-col shadow-[0px_0px_4px_rgba(0,0,0,0.2)] p-5 rounded-2xl gap-2 w-full max-w-2xl mx-auto bg-white">
                 <h1 className="text-center font-bold text-[24px]">Halaman Tambah Product</h1>
                 <form onSubmit={handleSubmit} className="mt-3 p-3 flex flex-col gap-3">

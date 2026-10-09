@@ -2,6 +2,8 @@ import { Head, router, usePage } from "@inertiajs/react";
 import {Link} from "@inertiajs/react";
 import Button from "@/Components/ui/Button/Button";
 import CustomerNavbar2 from "@/Components/CustomerNavbar2";
+import { Alert, AlertTitle, AlertDescription } from "@/Components/ui/Alert";
+import { CheckCircle2, AlertCircle } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +15,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/Components/ui/alert-dialog"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 interface IUser {
     id: number;
     name: string;
@@ -35,6 +37,7 @@ interface IndexTypes {
 }
 const Index = (props: IndexTypes) => {
     const {orders} = props;
+    const {flash} = usePage<any>().props;
     const user = usePage<any>().props.auth.user;
     const [isVisible, setVisible] = useState(false);
     const handleComplete = (id: number, status: string) => {
@@ -42,12 +45,31 @@ const Index = (props: IndexTypes) => {
                 preserveScroll:true,
             });
     }
+    useEffect(() => {
+        if(flash?.message) {
+            setVisible(true);
+            const Timer = setTimeout(() => {
+                setVisible(true);
+            }, 3000);
+            return () => clearTimeout(Timer);
+        }
+    }, [flash?.message]);
     return (
         <div className="min-h-screen bg-gray-50">
             <CustomerNavbar2 />
             <main className="p-4 md:p-8 min-h-screen bg-white">
                 <Head title="Order"/>
-        
+                <div className="fixed top-15 md:right-[40%] right-10 z-[100] flex flex-col gap-2 min-w-[300px] max-w-md transition-all duration-300">
+                    {isVisible && flash?.message && (
+                        <Alert variant="success" className="shadow-lg animate-in fade-in slide-in-from-top-5">
+                            <CheckCircle2 className="h-4 w-4" />
+                            <AlertTitle>Berhasil!</AlertTitle>
+                            <AlertDescription>
+                                {flash.message}
+                            </AlertDescription>
+                        </Alert>
+                    )} 
+                </div>
                 <div className="max-w-6xl mx-auto">
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
                         <h1 className="text-2xl md:text-[32px] font-bold text-slate-800">List Order Milik: {user.name}</h1>

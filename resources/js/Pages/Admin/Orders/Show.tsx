@@ -1,7 +1,10 @@
 import React from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Button from '@/Components/ui/Button/Button';
+import { Alert, AlertTitle, AlertDescription } from "@/Components/ui/Alert";
+import { useState,useEffect } from 'react';
+import { CheckCircle2, AlertCircle } from "lucide-react";
 import { ArrowLeft, User, Package, Calendar, FileText, CheckCircle } from 'lucide-react';
 
 interface Menu {
@@ -33,15 +36,35 @@ interface Order {
 }
 
 export default function AdminOrderShow({ order, orderItems }: { order: Order; orderItems: OrderItem[] }) {
-    
+    const {flash} = usePage<any>().props;
+    const [isVisible, setVisible] = useState(false);
+
+    useEffect(()=> {
+        if(flash?.message) {
+            setVisible(true);
+            const Timer = setTimeout(() => {
+                setVisible(false);
+            }, 3000);
+
+            return () => clearTimeout(Timer);
+        }
+    }, [flash]);
     const markAsCompleted = () => {
         router.put(route('orders.completed', order.id), { status: 'completed' }, { preserveScroll: true });
     };
 
     return (
-        <AdminLayout title={`Detail Pesanan ${order.order_number}`}>
+        <AdminLayout title={`Detail Pesanan`}>
             <div className="flex flex-col gap-6 max-w-5xl mx-auto w-full">
-                
+                <div className="fixed top-15 right-10 md:right-[30%] z-[100] flex flex-col gap-2 min-w-[300px] max-w-md transition-all duration-300 justify-center items-center">
+                                    {isVisible && flash?.message && (
+                                        <Alert variant="success" className="shadow-lg animate-in fade-in slide-in-from-top-5 items-center">
+                                            <CheckCircle2 className="h-4 w-4" />
+                                            <AlertTitle>Berhasil!</AlertTitle>
+                                            <AlertDescription>{flash.message}</AlertDescription>
+                                        </Alert>
+                                    )}
+                                </div>
                 <div className="flex items-center gap-4">
                     <Link href={route('admin.orders.index')}>
                         <Button color="sekunder" className="!p-2 h-10 w-10 !rounded-lg" title="Kembali">
@@ -49,7 +72,7 @@ export default function AdminOrderShow({ order, orderItems }: { order: Order; or
                         </Button>
                     </Link>
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">Pesanan #{order.order_number}</h1>
+                        <h1 className="md:text-2xl text-xl font-bold text-gray-900">Pesanan #{order.order_number}</h1>
                         <p className="text-sm text-gray-500 mt-1">Detail pesanan dan informasi pelanggan.</p>
                     </div>
                 </div>
