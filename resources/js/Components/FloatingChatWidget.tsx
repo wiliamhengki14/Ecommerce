@@ -86,6 +86,7 @@ export default function FloatingChatWidget() {
             <button
                 onMouseDown={handleMouseDown}
                 onClick={handleToggle}
+                data-testid="floating-ai-chat-btn"
                 className={`p-4 rounded-full shadow-xl transition-all duration-300 flex items-center justify-center ${
                     isChatOpen 
                         ? 'bg-zinc-800 hover:bg-zinc-700 text-white rotate-90' 

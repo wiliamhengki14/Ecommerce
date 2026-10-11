@@ -177,6 +177,7 @@ export default function AIChat({ onDragStart, isDragging = false }: AIChatProps)
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
+            data-testid="ai-chat-textarea"
             className="w-full bg-transparent text-sm resize-none outline-none placeholder:text-[#1c1c1c] text-[#1c1c1c] min-h-[50px] max-h-[50px] p-2 leading-relaxed focus:ring-0 border-0"
             placeholder="Type your message here..."
             disabled={isLoading}
@@ -191,6 +192,7 @@ export default function AIChat({ onDragStart, isDragging = false }: AIChatProps)
             <button
               onClick={handleSend}
               disabled={!input.trim() || isLoading}
+              data-testid="ai-chat-send-btn"
               className="p-2.5 rounded-full bg-zinc-800/60 hover:bg-zinc-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ArrowUp className="w-4 h-4 stroke-[3]" />

@@ -152,7 +152,7 @@ export default function AdminOrderShow({ order, orderItems }: { order: Order; or
 
                             {order.status === 'pending' && (
                                 <div className="mt-6 pt-4 border-t border-gray-100">
-                                    <Button onClick={markAsCompleted} className="w-full flex items-center justify-center gap-2">
+                                    <Button onClick={markAsCompleted} data-testid="mark-order-completed-btn" className="w-full flex items-center justify-center gap-2">
                                         <CheckCircle className="h-4 w-4" /> Tandai Selesai
                                     </Button>
                                 </div>

@@ -40,7 +40,7 @@ export default function OrderPaymentModal({ show, onClose, totalAmount, onConfir
                             <Button color="sekunder" onClick={onClose}>
                                 Batal
                             </Button>
-                            <Button color="primer" onClick={onConfirm}>
+                            <Button color="primer" data-testid="modal-confirm-order-btn" onClick={onConfirm}>
                                 Ya, Order
                             </Button>
                         </div>
@@ -73,7 +73,7 @@ export default function OrderPaymentModal({ show, onClose, totalAmount, onConfir
                             <Button color="sekunder" onClick={onClose}>
                                 Batal
                             </Button>
-                            <Button color="primer" onClick={onConfirm}>
+                            <Button color="primer" data-testid="modal-confirm-order-btn" onClick={onConfirm}>
                                 Sudah Bayar & Order
                             </Button>
                         </div>

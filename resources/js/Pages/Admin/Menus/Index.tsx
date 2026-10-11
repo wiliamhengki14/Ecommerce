@@ -86,7 +86,7 @@ export default function AdminMenuIndex({ menus }: { menus: Menu[] }) {
                             />
                         </div>
                         <Link href={route('menus.create')}>
-                            <Button className="flex items-center gap-2 whitespace-nowrap">
+                            <Button data-testid="add-product-btn" className="flex items-center gap-2 whitespace-nowrap">
                                 <Plus className="h-4 w-4" />
                                 Tambah Produk
                             </Button>
@@ -155,6 +155,7 @@ export default function AdminMenuIndex({ menus }: { menus: Menu[] }) {
                                                     <Button
                                                         color="sekunder"
                                                         className="!p-2 h-10 w-10 !rounded-lg !text-red-600 !border-red-200 hover:!bg-red-50"
+                                                        data-testid={`delete-menu-btn-${menu.id}`}
                                                         onClick={() => confirmDelete(menu)}
                                                         title="Hapus"
                                                     >
@@ -193,7 +194,7 @@ export default function AdminMenuIndex({ menus }: { menus: Menu[] }) {
                         <Button color="sekunder" onClick={() => setShowDeleteModal(false)}>
                             Batal
                         </Button>
-                        <Button className="bg-red-600 text-white hover:bg-red-700" onClick={handleDelete}>
+                        <Button className="bg-red-600 text-white hover:bg-red-700" data-testid="confirm-delete-menu-btn" onClick={handleDelete}>
                             Ya, Hapus
                         </Button>
                     </div>

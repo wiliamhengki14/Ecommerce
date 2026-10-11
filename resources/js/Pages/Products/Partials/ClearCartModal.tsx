@@ -21,7 +21,7 @@ export default function ClearCartModal({ show, onClose, onConfirm }: ClearCartMo
                     <Button color="sekunder" onClick={onClose}>
                         Kembali
                     </Button>
-                    <Button className="bg-red-600 text-white hover:bg-red-700" onClick={onConfirm}>
+                    <Button className="bg-red-600 text-white hover:bg-red-700" data-testid="modal-confirm-clear-cart-btn" onClick={onConfirm}>
                         Ya, Kosongkan
                     </Button>
                 </div>

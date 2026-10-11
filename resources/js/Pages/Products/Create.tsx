@@ -131,7 +131,7 @@ const Create = () => {
                         }}
                         className="file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-[#1c1c1c] file:text-white hover:file:bg-[#333333] cursor-pointer"
                     />
-                    <Button type="submit" color="primer" className="w-full" disabled={processing}>{processing ? 'Memproses...' : 'Tambah'}</Button>
+                    <Button type="submit" color="primer" className="w-full" data-testid="submit-create-menu-btn" disabled={processing}>{processing ? 'Memproses...' : 'Tambah'}</Button>
                 </form>
                 <div className="flex flex-col justify-center items-center">
                     <Link href={route('admin.menus.index')} className="text-center py-1 px-2 border border-[#1c1c1c] w-[100px] rounded-[14px]">Ke Menu</Link>

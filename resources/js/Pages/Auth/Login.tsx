@@ -61,6 +61,7 @@ const Login = ({ status }: LoginProps) => {
                         value={data.email}
                         error={errors.email}
                         icon={<User size={18} />}
+                        data-testid="login-email-input"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData("email", e.target.value)}
                     />
 
@@ -74,6 +75,7 @@ const Login = ({ status }: LoginProps) => {
                         value={data.password}
                         error={errors.password}
                         icon={<Lock size={18} />}
+                        data-testid="login-password-input"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData("password", e.target.value)}
                     />
 
@@ -93,6 +95,7 @@ const Login = ({ status }: LoginProps) => {
                         color="primer"
                         disabled={processing}
                         className="w-full"
+                        data-testid="login-submit-button"
                     >
                         {processing ? "Memproses..." : "Login"}
                     </Button>

@@ -33,6 +33,7 @@ const Register = () => {
                         label="Name" 
                         required 
                         placeholder="Masukkan Nama"
+                        data-testid="register-name-input"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData('name', e.target.value)}
                         error={errors.name}
                         icon={<User size={18} />}
@@ -45,6 +46,7 @@ const Register = () => {
                         placeholder="Masukkan Email"
                         required
                         icon={<User size={18} />}
+                        data-testid="register-email-input"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData('email', e.target.value)}
                         error={errors.email}
                         value={data.email}
@@ -57,6 +59,7 @@ const Register = () => {
                         required 
                         icon={<Lock size={18} />}
                         placeholder="Masukkan Password" 
+                        data-testid="register-password-input"
                         value={data.password}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData('password', e.target.value)}
                         error={errors.password}
@@ -69,11 +72,12 @@ const Register = () => {
                         type="password"
                         required
                         icon={<Lock size={18} />}
+                        data-testid="register-password-confirmation-input"
                         value={data.password_confirmation}
                         error={errors.password_confirmation}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData('password_confirmation', e.target.value)}
                     />
-                    <Button type="submit" disabled={processing} className="mt-2">
+                    <Button type="submit" disabled={processing} className="mt-2" data-testid="register-submit-button">
                         {processing ? 'Memproses...' : 'Register'}
                     </Button>
                 </form>

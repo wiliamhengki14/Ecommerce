@@ -92,7 +92,7 @@ const Detail = (props: IndexTypes) => {
                             </div>
 
                             <div className="flex flex-col gap-3 mt-4 mb-7">
-                                <Button onClick={() => handleCart(menu.id)} color="primer" className="w-full py-3 text-lg font-bold shadow-md hover:shadow-lg transition">
+                                <Button onClick={() => handleCart(menu.id)} color="primer" className="w-full py-3 text-lg font-bold shadow-md hover:shadow-lg transition" data-testid="add-to-cart-button">
                                     Add To Cart
                                 </Button>
                             </div>

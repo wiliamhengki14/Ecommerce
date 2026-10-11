@@ -156,6 +156,7 @@ const Index = (props: IndexMenu) => {
                             return (
                                 <Button
                                     key={item}
+                                    data-testid={`category-filter-${item}`}
                                     onClick={() => handleFilter(item)}
                                     color={isSelected ? "primer" : "sekunder"}
                                     className="font-bold"
@@ -168,14 +169,14 @@ const Index = (props: IndexMenu) => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 mt-[20px] gap-5">
                         {menus.map((item) => (
-                            <div className="p-4 shadow-[0px_0px_4px_rgba(0,0,0,0.2)] rounded-[24px]">
+                            <div key={item.id} data-testid={`product-card-${item.id}`} className="p-4 shadow-[0px_0px_4px_rgba(0,0,0,0.2)] rounded-[24px]">
                                 <img src={`${item.image_url}`} alt={item.name} className="w-[100%] h-[200px] object-cover rounded-[14px] mb-[10px]" />
                                 <hr />
-                                <p className="font-extrabold text-lg mt-2">{item.name}</p>
+                                <p className="font-extrabold text-lg mt-2" data-testid={`product-name-${item.id}`}>{item.name}</p>
                                 <div className="flex md:justify-between items-center justify-between">
-                                    <p className="font-extrabold text-lg" >Rp {Number(item.price).toLocaleString('id-ID')}</p>
+                                    <p className="font-extrabold text-lg">Rp {Number(item.price).toLocaleString('id-ID')}</p>
                                     <Link href={route('menus.detail', item.id)}>
-                                        <Button color="primer" className="">Detail</Button>
+                                        <Button color="primer" data-testid={`product-detail-btn-${item.id}`} className="">Detail</Button>
                                     </Link>
                                 </div>
 
@@ -188,7 +189,7 @@ const Index = (props: IndexMenu) => {
                     <div className="shadow-[0px_0px_4px_rgba(0,0,0,0.2)] flex flex-col p-5 sticky top-[100px] rounded-2xl h-fit max-h-[calc(100vh-120px)] overflow-y-auto">
                         <div className="flex items-center justify-between">
                             <h1 className="font-extrabold text-2xl">Customer Information</h1>
-                            <Button color="sekunder" onClick={() => setShowCancelModal(true)} disabled={carts.length == 0}>Cancel</Button>
+                            <Button color="sekunder" data-testid="sidebar-cancel-cart-btn" onClick={() => setShowCancelModal(true)} disabled={carts.length == 0}>Cancel</Button>
                         </div>
                         <div className="bg-[#ececec] p-5 rounded-3xl mt-5">
                             <h3 className="font-extrabold text-lg">Customer Name</h3>
@@ -203,7 +204,7 @@ const Index = (props: IndexMenu) => {
                             ) : (
                                 <div className="flex flex-col">
                                     {carts.map((item) => (
-                                        <div className="flex items-center justify-between">
+                                        <div key={item.id} className="flex items-center justify-between">
                                             <p className="font-extrabold">{item.menu.name}</p>
                                             <div className="flex items-center gap-6 mb-2">
                                                 <Button onClick={() => handleIncrement('decrement', item.menu_id)} className="w-8 h-8">-</Button>
@@ -223,9 +224,9 @@ const Index = (props: IndexMenu) => {
                         {carts.length >= 1 ? (
                             <div className="grid grid-cols-2 gap-4">
                                 <Link href={route('carts.index')} classID="w-full">
-                                    <Button color="sekunder" className="w-full">Cart</Button>
+                                    <Button color="sekunder" data-testid="sidebar-cart-btn" className="w-full">Cart</Button>
                                 </Link>
-                                <Button onClick={() => setShowOrderModal(true)} className="w-full">Order</Button>
+                                <Button data-testid="sidebar-order-btn" onClick={() => setShowOrderModal(true)} className="w-full">Order</Button>
                             </div>
                         ) : ''}
                     </div>

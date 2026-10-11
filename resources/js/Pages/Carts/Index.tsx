@@ -161,16 +161,18 @@ const Index = (props: IndexType) => {
                                             <div className="flex items-center gap-3">
                                                 <button
                                                     type="button"
+                                                    data-testid={`cart-decrement-${item.menu_id}`}
                                                     onClick={() => handleUpdateQuantity("decrement", item.menu_id)}
                                                     className="w-8 h-8 rounded-lg border border-slate-300 font-bold hover:bg-slate-100 active:scale-95 transition flex items-center justify-center text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:active:scale-100"
                                                 >
                                                     -
                                                 </button>
-                                                <span className="font-bold text-sm text-slate-800 w-6 text-center">
+                                                <span className="font-bold text-sm text-slate-800 w-6 text-center" data-testid={`cart-quantity-${item.menu_id}`}>
                                                     {item.quantity}
                                                 </span>
                                                 <button
                                                     type="button"
+                                                    data-testid={`cart-increment-${item.menu_id}`}
                                                     onClick={() => handleUpdateQuantity("increment", item.menu_id)}
                                                     className="w-8 h-8 rounded-lg border border-slate-300 font-bold hover:bg-slate-100 active:scale-95 transition flex items-center justify-center text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:active:scale-100"
                                                     disabled={item.quantity >= item.menu.stock}
@@ -200,7 +202,7 @@ const Index = (props: IndexType) => {
                                     </span>
 
                                 </div>
-                                <Button onClick={() => setOrderModal(true)}>Order</Button>
+                                <Button data-testid="cart-order-button" onClick={() => setOrderModal(true)}>Order</Button>
 
                             </div>
                             <Modal show={orderModal} onClose={() => setOrderModal(false)} maxWidth="sm">
@@ -232,7 +234,7 @@ const Index = (props: IndexType) => {
                                                 <Button color="sekunder" onClick={() => setOrderModal(false)}>
                                                     Batal
                                                 </Button>
-                                                <Button color="primer" onClick={handleOrder}>
+                                                <Button color="primer" data-testid="cart-modal-confirm-order-button" onClick={handleOrder}>
                                                     Ya, Order
                                                 </Button>
                                             </div>
@@ -265,7 +267,7 @@ const Index = (props: IndexType) => {
                                                 <Button color="sekunder" onClick={() => setOrderModal(false)}>
                                                     Batal
                                                 </Button>
-                                                <Button color="primer" onClick={handleOrder}>
+                                                <Button color="primer" data-testid="cart-modal-confirm-order-button" onClick={handleOrder}>
                                                     Sudah Bayar & Order
                                                 </Button>
                                             </div>

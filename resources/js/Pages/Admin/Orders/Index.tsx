@@ -188,7 +188,7 @@ export default function AdminOrderIndex({ orders, filters }: { orders: Paginated
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center justify-end gap-2">
-                                                    <Link href={route('admin.orders.show', order.id)}>
+                                                    <Link href={route('admin.orders.show', order.id)} data-testid={`order-detail-link-${order.id}`}>
                                                         <Button color="sekunder" className="!p-2 h-10 w-10 !rounded-lg" title="Detail Pesanan">
                                                             <Eye className="h-4 w-4" />
                                                         </Button>
