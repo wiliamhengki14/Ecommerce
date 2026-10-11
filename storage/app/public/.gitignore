@@ -1,2 +1,6 @@
 *
 !.gitignore
+!Logo/
+!Logo/**
+!products/
+!products/**
